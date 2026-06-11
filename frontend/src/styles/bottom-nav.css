@@ -1,0 +1,71 @@
+/* ── Bottom Nav ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.bottom-nav__inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 60px;
+}
+
+.bottom-nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: rgba(255,255,255,0.38);
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 150ms;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav__item:hover { color: rgba(255,255,255,0.7); }
+
+.bottom-nav__item.is-active {
+  color: #ef4444;
+}
+
+.bottom-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 150ms;
+}
+
+.bottom-nav__item.is-active .bottom-nav__icon {
+  transform: translateY(-1px);
+}
+
+/* Active dot indicator */
+.bottom-nav__item.is-active::after {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ef4444;
+  margin-top: 1px;
+}
+
+@media (min-width: 768px) {
+  .bottom-nav__inner { max-width: 420px; }
+}
