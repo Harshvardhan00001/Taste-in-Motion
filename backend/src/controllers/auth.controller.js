@@ -3,6 +3,13 @@ const foodPartnerModel = require("../models/foodpartner.model")
 const bcrypt = require('bcryptjs')
 const jwt = require("jsonwebtoken")
 
+const cookieOptions = {
+    httpOnly: true,
+    sameSite: "none",   // ✅ required for cross-domain (Vercel + Render)
+    secure: true,       // ✅ required when sameSite is "none"
+    maxAge: 7 * 24 * 60 * 60 * 1000
+}
+
 async function registerUser(req, res) {
     try {
         const { fullName, email, password } = req.body;
@@ -15,13 +22,8 @@ async function registerUser(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.create({ fullName, email, password: hashedPassword })
 
-        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)  // ✅ consistent key
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: false
-        })
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)
+        res.cookie("userToken", token, cookieOptions)
 
         return res.status(201).json({
             message: "user register success",
@@ -48,13 +50,8 @@ async function loginUser(req, res) {
             return res.status(400).json({ message: "invalid password" })
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)  // ✅ was _id, now id — matches middleware
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: false
-        })
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)
+        res.cookie("userToken", token, cookieOptions)
 
         return res.status(200).json({
             message: "login successfully",
@@ -66,7 +63,7 @@ async function loginUser(req, res) {
 }
 
 async function logOut(req, res) {
-    res.clearCookie("token")
+    res.clearCookie("userToken", cookieOptions)
     return res.status(200).json({ message: "log out success" })
 }
 
@@ -78,19 +75,14 @@ async function registerFoodPartner(req, res) {
 
         const isAccountExist = await foodPartnerModel.findOne({ email })
         if (isAccountExist) {
-            return res.status(400).json({ message: "user already exists as foodpartner" })  // ✅ added return
+            return res.status(400).json({ message: "user already exists as foodpartner" })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const foodPartner = await foodPartnerModel.create({ name, email, password: hashedPassword })
 
-        const token = jwt.sign({ _id: foodPartner._id }, process.env.SECRET_KEY)  // ✅ consistent key
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: false
-        })
+        const token = jwt.sign({ _id: foodPartner._id }, process.env.SECRET_KEY)
+        res.cookie("partnerToken", token, cookieOptions)
 
         return res.status(201).json({
             message: "register success of food partner",
@@ -107,24 +99,19 @@ async function loginFoodPartner(req, res) {
 
         const user = await foodPartnerModel.findOne({ email })
         if (!user) {
-            return res.status(400).json({ message: "email not exists of food partner" })  // ✅ added return
+            return res.status(400).json({ message: "email not exists of food partner" })
         }
 
         const checkpass = await bcrypt.compare(password, user.password)
         if (!checkpass) {
-            return res.status(401).json({ message: "user password is wrong" })  // ✅ added return
+            return res.status(401).json({ message: "user password is wrong" })
         }
 
-        const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY)  // ✅ consistent key
+        const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY)
+        res.cookie("partnerToken", token, cookieOptions)
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: false
-        })
-
-        return res.status(200).json({  // ✅ was 201, login should return 200
-            message: "login success as foodpartner",  // ✅ fixed typo "messgae"
+        return res.status(200).json({
+            message: "login success as foodpartner",
             user: { _id: user._id, email: user.email }
         })
     } catch (err) {
@@ -132,8 +119,8 @@ async function loginFoodPartner(req, res) {
     }
 }
 
-async function logoutFoodPartner(req, res) {  // ✅ was (res, res) — both params were res!
-    res.clearCookie("token")
+async function logoutFoodPartner(req, res) {
+    res.clearCookie("partnerToken", cookieOptions)
     return res.status(200).json({ message: "log out success" })
 }
 
