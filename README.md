@@ -198,18 +198,3 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots here after deployment
-
----
-
-## 👤 Author
-
-Built by [@ankurdotio](https://github.com/ankurdotio)
-
----
-
-## 📄 License
-
-MIT License — feel free to use and modify.
