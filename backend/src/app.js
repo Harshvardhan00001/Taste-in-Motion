@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const app=express();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://taste-in-motion.vercel.app",
     credentials: true
 }));
 app.use(cookieParser())
