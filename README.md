@@ -1,18 +1,21 @@
 # 🍽️ Taste in Motion
 
-A short-video food discovery app inspired by Instagram Reels — built for food lovers to explore, like, and save food content from local restaurant partners.
+A short-video food discovery app inspired by Instagram Reels — built for food lovers to scroll through, like, and save food content from local restaurant partners.
 
-**Live Demo:** [taste-in-motion.vercel.app](https://taste-in-motion.vercel.app)
+
 
 ---
 
 ## 📱 Features
 
-- **Vertical Reel Feed** — Snap-scroll through food videos, auto-play on focus
-- **Like & Save** — Interact with food reels, view saved content anytime
-- **Food Partner Profiles** — Restaurants upload videos and manage their presence
-- **Dual Auth System** — Separate login for Users and Food Partners
-- **JWT Authentication** — Secure cookie-based sessions
+- **Vertical Reel Feed** — Snap-scroll through food videos with autoplay on focus, just like Instagram Reels
+- **Like & Save** — Like or bookmark any food reel, with live count updates
+- **Saved Collection** — Dedicated page to revisit all your saved food videos
+- **Food Partner Profiles** — Restaurants manage their own content and profile page
+- **Dual Auth System** — Completely separate login flows for Users and Food Partners
+- **Top Navbar** — Shows logged-in user's avatar, name and role badge; Login/Register when logged out
+- **JWT Cookie Auth** — Secure HTTP-only cookie sessions with environment-aware settings
+- **Dark UI** — Full dark theme with red-orange brand gradient, built for mobile-first
 
 ---
 
@@ -23,9 +26,9 @@ A short-video food discovery app inspired by Instagram Reels — built for food 
 |------|---------|
 | React 18 | UI framework |
 | React Router v6 | Client-side routing |
-| Axios | HTTP requests |
+| Axios | HTTP requests with credentials |
 | Vite | Build tool |
-| CSS Variables | Theming & design tokens |
+| CSS Variables | Dark theme design tokens |
 
 ### Backend
 | Tech | Purpose |
@@ -34,52 +37,54 @@ A short-video food discovery app inspired by Instagram Reels — built for food 
 | MongoDB + Mongoose | Database |
 | JWT | Authentication tokens |
 | bcryptjs | Password hashing |
-| cookie-parser | Cookie management |
-| Multer | File/video upload handling |
-| CORS | Cross-origin requests |
+| cookie-parser | HTTP-only cookie sessions |
+| Multer | Video upload handling |
+| ImageKit | Video/media cloud storage |
+| CORS | Cross-origin request handling |
 
 ---
 
 ## 🗂️ Project Structure
 
 ```
-taste-in-motion/
+Taste-in-Motion/
 ├── frontend/
-│   ├── src/
-│   │   ├── api/
-│   │   │   └── axiosInstance.js       # Shared axios config
-│   │   ├── components/
-│   │   │   ├── ReelFeed.jsx           # Reusable vertical video feed
-│   │   │   └── BottomNav.jsx          # Bottom navigation bar
-│   │   ├── pages/
-│   │   │   ├── auth/
-│   │   │   │   ├── UserLogin.jsx
-│   │   │   │   ├── UserRegister.jsx
-│   │   │   │   ├── FoodPartnerLogin.jsx
-│   │   │   │   ├── FoodPartnerRegister.jsx
-│   │   │   │   └── ChooseRegister.jsx
-│   │   │   ├── general/
-│   │   │   │   ├── Home.jsx           # Main reel feed
-│   │   │   │   └── Saved.jsx          # Saved videos
-│   │   │   └── food-partner/
-│   │   │       ├── CreateFood.jsx     # Upload food video
-│   │   │       └── Profile.jsx        # Partner profile page
-│   │   ├── styles/
-│   │   │   ├── theme.css
-│   │   │   ├── reels.css
-│   │   │   ├── auth-shared.css
-│   │   │   └── bottom-nav.css
-│   │   └── routes/
-│   │       └── AppRoutes.jsx
-│   └── .env.production
+│   └── src/
+│       ├── components/
+│       │   ├── ReelFeed.jsx          # Reusable vertical video feed with autoplay
+│       │   ├── TopNav.jsx            # Top navbar with auth-aware avatar
+│       │   └── BottomNav.jsx         # Bottom navigation bar
+│       ├── context/
+│       │   └── AuthContext.jsx       # Global auth state
+│       ├── pages/
+│       │   ├── auth/
+│       │   │   ├── UserLogin.jsx
+│       │   │   ├── UserRegister.jsx
+│       │   │   ├── FoodPartnerLogin.jsx
+│       │   │   ├── FoodPartnerRegister.jsx
+│       │   │   └── ChooseRegister.jsx
+│       │   ├── general/
+│       │   │   ├── Home.jsx          # Main reel feed
+│       │   │   └── Saved.jsx         # Saved videos
+│       │   └── food-partner/
+│       │       ├── CreateFood.jsx    # Upload food video
+│       │       └── Profile.jsx       # Partner profile + video grid
+│       ├── styles/
+│       │   ├── theme.css             # Design tokens (dark theme)
+│       │   ├── reels.css             # Reel feed styles
+│       │   ├── auth-shared.css       # Auth page styles
+│       │   ├── top-nav.css           # Top navbar styles
+│       │   └── bottom-nav.css        # Bottom nav styles
+│       └── routes/
+│           └── AppRoutes.jsx
 │
 └── backend/
     └── src/
         ├── controllers/
-        │   ├── auth.controller.js
-        │   └── food.controller.js
+        │   ├── auth.controller.js    # Register, login, logout for both roles
+        │   └── food.controller.js    # CRUD, like, save food reels
         ├── middlewares/
-        │   └── auth.middleware.js
+        │   └── auth.middleware.js    # JWT verification for user & partner
         ├── models/
         │   ├── user.model.js
         │   ├── foodpartner.model.js
@@ -91,7 +96,7 @@ taste-in-motion/
         │   ├── food.routes.js
         │   └── food-partner.routes.js
         ├── services/
-        │   └── storage.service.js
+        │   └── storage.service.js    # ImageKit integration
         ├── app.js
         └── server.js
 ```
@@ -103,12 +108,13 @@ taste-in-motion/
 ### Prerequisites
 - Node.js v18+
 - MongoDB Atlas account
+- ImageKit account (for video storage)
 - Git
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/your-username/taste-in-motion.git
-cd taste-in-motion
+git clone https://github.com/Harshvardhan00001/Taste-in-Motion.git
+cd Taste-in-Motion
 ```
 
 ### 2. Setup Backend
@@ -117,11 +123,15 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in `/backend`:
+Create `.env` in `/backend`:
 ```env
-SECRET_KEY=your_jwt_secret_key_here
-MONGODB_URI=your_mongodb_atlas_connection_string
 PORT=3000
+NODE_ENV=development
+SECRET_KEY=your_jwt_secret_key
+MONGO_URI=your_mongodb_atlas_connection_string
+IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
+IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
+IMAGEKIT_URL_ENDPOINT=your_imagekit_url_endpoint
 ```
 
 Start the backend:
@@ -133,15 +143,6 @@ node src/server.js
 ```bash
 cd frontend
 npm install
-```
-
-Create a `.env.development` file in `/frontend`:
-```env
-VITE_API_URL=http://localhost:3000
-```
-
-Start the frontend:
-```bash
 npm run dev
 ```
 
@@ -154,7 +155,7 @@ Open [http://localhost:5173](http://localhost:5173)
 ### Auth
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/api/auth/user/register` | Register a user | ❌ |
+| POST | `/api/auth/user/register` | Register a new user | ❌ |
 | POST | `/api/auth/user/login` | Login as user | ❌ |
 | GET | `/api/auth/user/logout` | Logout user | ❌ |
 | POST | `/api/auth/food-partner/register` | Register food partner | ❌ |
@@ -167,13 +168,13 @@ Open [http://localhost:5173](http://localhost:5173)
 | GET | `/api/food` | Get all food reels | User |
 | POST | `/api/food` | Upload a food reel | Partner |
 | POST | `/api/food/like` | Like / unlike a reel | User |
-| POST | `/api/food/save` | Save / unsave a reel | User |
 | GET | `/api/food/save` | Get saved reels | User |
+| POST | `/api/food/save` | Save / unsave a reel | User |
 
 ### Food Partner
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/api/food-partner/:id` | Get partner profile | ❌ |
+| GET | `/api/food-partner/:id` | Get partner profile + videos | ❌ |
 
 ---
 
@@ -184,17 +185,54 @@ Open [http://localhost:5173](http://localhost:5173)
 | Frontend | [Vercel](https://vercel.com) |
 | Backend | [Render](https://render.com) |
 | Database | [MongoDB Atlas](https://cloud.mongodb.com) |
+| Media Storage | [ImageKit](https://imagekit.io) |
 
-### Deploy Backend (Render)
+### Deploy Backend on Render
 1. New Web Service → connect GitHub repo
 2. Root Directory: `backend`
 3. Start Command: `node src/server.js`
-4. Add env vars: `SECRET_KEY`, `MONGODB_URI`
+4. Add environment variables:
+```
+NODE_ENV=production
+SECRET_KEY=...
+MONGO_URI=...
+IMAGEKIT_PUBLIC_KEY=...
+IMAGEKIT_PRIVATE_KEY=...
+IMAGEKIT_URL_ENDPOINT=...
+```
 
-### Deploy Frontend (Vercel)
+### Deploy Frontend on Vercel
 1. Import GitHub repo → Vercel
 2. Root Directory: `frontend`
-3. Add env var: `VITE_API_URL=https://your-render-url.onrender.com`
+3. Add environment variable:
+```
+VITE_API_URL=https://your-render-url.onrender.com
+```
+
+> ⚠️ **Important:** Do NOT deploy the Express backend on Vercel — it's serverless and breaks HTTP-only cookies. Use Render for the backend.
 
 ---
+
+## 🔐 Auth Flow
+
+```
+User visits app
+      ↓
+Login → POST /api/auth/user/login
+      ↓
+Backend signs JWT → sets HTTP-only cookie (userToken)
+      ↓
+Frontend saves user info to localStorage → TopNav shows avatar
+      ↓
+All protected requests send cookie automatically (withCredentials: true)
+      ↓
+Auth middleware verifies cookie → grants access
+```
+
+Two separate cookies are used so both roles can be active simultaneously:
+- `userToken` — for regular users
+- `partnerToken` — for food partners
+
+---
+
 
