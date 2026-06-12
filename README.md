@@ -178,40 +178,6 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## ☁️ Deployment
-
-| Service | Platform |
-|---------|----------|
-| Frontend | [Vercel](https://vercel.com) |
-| Backend | [Render](https://render.com) |
-| Database | [MongoDB Atlas](https://cloud.mongodb.com) |
-| Media Storage | [ImageKit](https://imagekit.io) |
-
-### Deploy Backend on Render
-1. New Web Service → connect GitHub repo
-2. Root Directory: `backend`
-3. Start Command: `node src/server.js`
-4. Add environment variables:
-```
-NODE_ENV=production
-SECRET_KEY=...
-MONGO_URI=...
-IMAGEKIT_PUBLIC_KEY=...
-IMAGEKIT_PRIVATE_KEY=...
-IMAGEKIT_URL_ENDPOINT=...
-```
-
-### Deploy Frontend on Vercel
-1. Import GitHub repo → Vercel
-2. Root Directory: `frontend`
-3. Add environment variable:
-```
-VITE_API_URL=https://your-render-url.onrender.com
-```
-
-> ⚠️ **Important:** Do NOT deploy the Express backend on Vercel — it's serverless and breaks HTTP-only cookies. Use Render for the backend.
-
----
 
 ## 🔐 Auth Flow
 
