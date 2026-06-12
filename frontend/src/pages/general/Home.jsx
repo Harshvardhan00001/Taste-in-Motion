@@ -1,46 +1,50 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axios from 'axios'
 import '../../styles/reels.css'
 import ReelFeed from '../../components/ReelFeed'
 
 const Home = () => {
-    const [ videos, setVideos ] = useState([])
-    // Autoplay behavior is handled inside ReelFeed
+    const [videos, setVideos] = useState([])
 
     useEffect(() => {
-        axios.get("https://taste-in-motion-api.vercel.app/api/food", { withCredentials: true })
+        axios.get("http://localhost:3000/api/food", { withCredentials: true })
             .then(response => {
-
-                console.log(response.data);
-
-                setVideos(response.data.foodItems)
+                setVideos(response.data.foodItems ?? [])
             })
-            .catch(() => { /* noop: optionally handle error */ })
+            .catch(err => console.error("Feed error:", err.response?.status))
     }, [])
 
-    // Using local refs within ReelFeed; keeping map here for dependency parity if needed
-
     async function likeVideo(item) {
-
-        const response = await axios.post("https://taste-in-motion-api.vercel.app/api/food/like", { foodId: item._id }, {withCredentials: true})
-
-        if(response.data.like){
-            console.log("Video liked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount + 1 } : v))
-        }else{
-            console.log("Video unliked");
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, likeCount: v.likeCount - 1 } : v))
+        try {
+            const response = await axios.post("http://localhost:3000/api/food/like",
+                { foodId: item._id },
+                { withCredentials: true }
+            )
+            const delta = response.data.like ? 1 : -1
+            setVideos(prev => prev.map(v =>
+                v._id === item._id
+                    ? { ...v, likeCount: Math.max(0, (v.likeCount ?? 0) + delta), isLiked: response.data.like }
+                    : v
+            ))
+        } catch (err) {
+            console.error("Like error:", err.response?.status)
         }
-        
     }
 
     async function saveVideo(item) {
-        const response = await axios.post("https://taste-in-motion-api.vercel.app/api/food/save", { foodId: item._id }, { withCredentials: true })
-        
-        if(response.data.save){
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount + 1 } : v))
-        }else{
-            setVideos((prev) => prev.map((v) => v._id === item._id ? { ...v, savesCount: v.savesCount - 1 } : v))
+        try {
+            const response = await axios.post("http://localhost:3000/api/food/save",
+                { foodId: item._id },
+                { withCredentials: true }
+            )
+            const delta = response.data.save ? 1 : -1
+            setVideos(prev => prev.map(v =>
+                v._id === item._id
+                    ? { ...v, savesCount: Math.max(0, (v.savesCount ?? 0) + delta), isSaved: response.data.save }
+                    : v
+            ))
+        } catch (err) {
+            console.error("Save error:", err.response?.status)
         }
     }
 

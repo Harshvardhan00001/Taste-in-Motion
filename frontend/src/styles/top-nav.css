@@ -1,0 +1,153 @@
+@import './theme.css';
+
+.top-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: 56px;
+  background: rgba(10,10,10,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.top-nav__inner {
+  height: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.top-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.top-nav__logo span {
+  background: linear-gradient(135deg, #e23744, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Auth links (logged out) */
+.top-nav__auth-links { display: flex; align-items: center; gap: 8px; }
+
+.top-nav__login-btn {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 140ms;
+}
+.top-nav__login-btn:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
+
+.top-nav__register-btn {
+  color: #fff;
+  font-size: 0.83rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e23744, #f97316);
+  box-shadow: 0 2px 12px rgba(226,55,68,0.35);
+  transition: opacity 140ms;
+}
+.top-nav__register-btn:hover { opacity: 0.88; }
+
+/* Profile pill (logged in) */
+.top-nav__profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: background 140ms;
+  user-select: none;
+  position: relative;
+}
+.top-nav__profile:hover { background: rgba(255,255,255,0.12); }
+
+.top-nav__avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e23744, #f97316);
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.top-nav__avatar--lg { width: 40px; height: 40px; font-size: 0.85rem; }
+
+.top-nav__user-info { display: flex; flex-direction: column; line-height: 1.2; }
+.top-nav__name  { font-size: 0.82rem; font-weight: 700; color: #fff; }
+.top-nav__role  { font-size: 0.62rem; color: #f97316; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.top-nav__chevron { color: rgba(255,255,255,0.45); transition: transform 200ms; flex-shrink: 0; }
+.top-nav__chevron.open { transform: rotate(180deg); }
+
+/* Dropdown */
+.top-nav__dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 210px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.65);
+  overflow: hidden;
+  animation: dropIn 160ms cubic-bezier(.34,1.56,.64,1);
+  z-index: 300;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.top-nav__dropdown-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 14px 12px;
+}
+.top-nav__dropdown-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
+.top-nav__dropdown-role { font-size: 0.67rem; color: #f97316; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 1px; }
+
+.top-nav__dropdown-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 0; }
+
+.top-nav__dropdown-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 16px;
+  font-size: 0.84rem; font-weight: 500;
+  color: rgba(255,255,255,0.72);
+  text-decoration: none;
+  background: none; border: none;
+  width: 100%; text-align: left; cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.top-nav__dropdown-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.top-nav__dropdown-item--danger { color: #e23744; }
+.top-nav__dropdown-item--danger:hover { background: rgba(226,55,68,0.1); }
+
+/* ── Reels page spacing fix ── */
+/* Push reel content below top nav and above bottom nav */
+.reels-page { padding-top: 56px; }
+.reel { height: calc(100dvh - 56px - 60px); }

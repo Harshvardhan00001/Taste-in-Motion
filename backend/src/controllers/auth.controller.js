@@ -3,28 +3,27 @@ const foodPartnerModel = require("../models/foodpartner.model")
 const bcrypt = require('bcryptjs')
 const jwt = require("jsonwebtoken")
 
+// ✅ Automatically switches between localhost and production
+const isProd = process.env.NODE_ENV === 'production'
+
 const cookieOptions = {
     httpOnly: true,
-    sameSite: "none",   // ✅ required for cross-domain (Vercel + Render)
-    secure: true,       // ✅ required when sameSite is "none"
+    sameSite: isProd ? "none" : "lax",  // "lax" for localhost, "none" for production
+    secure: isProd,                      // false for localhost, true for production
     maxAge: 7 * 24 * 60 * 60 * 1000
 }
 
 async function registerUser(req, res) {
     try {
         const { fullName, email, password } = req.body;
-
         const userAlreadyExists = await userModel.findOne({ email })
         if (userAlreadyExists) {
             return res.status(400).json({ message: "user already exists" })
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.create({ fullName, email, password: hashedPassword })
-
         const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)
         res.cookie("userToken", token, cookieOptions)
-
         return res.status(201).json({
             message: "user register success",
             _id: user._id,
@@ -39,23 +38,19 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
     try {
         const { email, password } = req.body;
-
         const user = await userModel.findOne({ email })
         if (!user) {
             return res.status(400).json({ message: "email invalid" })
         }
-
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ message: "invalid password" })
         }
-
         const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)
         res.cookie("userToken", token, cookieOptions)
-
         return res.status(200).json({
             message: "login successfully",
-            user: { _id: user._id, email: user.email }
+            user: { _id: user._id, email: user.email, fullName: user.fullName }
         })
     } catch (err) {
         return res.status(500).json({ message: "Server error", error: err.message })
@@ -72,18 +67,14 @@ async function logOut(req, res) {
 async function registerFoodPartner(req, res) {
     try {
         const { name, email, password } = req.body;
-
         const isAccountExist = await foodPartnerModel.findOne({ email })
         if (isAccountExist) {
             return res.status(400).json({ message: "user already exists as foodpartner" })
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
         const foodPartner = await foodPartnerModel.create({ name, email, password: hashedPassword })
-
         const token = jwt.sign({ _id: foodPartner._id }, process.env.SECRET_KEY)
         res.cookie("partnerToken", token, cookieOptions)
-
         return res.status(201).json({
             message: "register success of food partner",
             foodPartner: { _id: foodPartner._id, email: foodPartner.email, name: foodPartner.name }
@@ -96,23 +87,19 @@ async function registerFoodPartner(req, res) {
 async function loginFoodPartner(req, res) {
     try {
         const { email, password } = req.body;
-
         const user = await foodPartnerModel.findOne({ email })
         if (!user) {
             return res.status(400).json({ message: "email not exists of food partner" })
         }
-
         const checkpass = await bcrypt.compare(password, user.password)
         if (!checkpass) {
             return res.status(401).json({ message: "user password is wrong" })
         }
-
         const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY)
         res.cookie("partnerToken", token, cookieOptions)
-
         return res.status(200).json({
             message: "login success as foodpartner",
-            user: { _id: user._id, email: user.email }
+            user: { _id: user._id, email: user.email, name: user.name }
         })
     } catch (err) {
         return res.status(500).json({ message: "Server error", error: err.message })
