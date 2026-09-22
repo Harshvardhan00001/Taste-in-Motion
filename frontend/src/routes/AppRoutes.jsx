@@ -11,6 +11,7 @@ import BottomNav from '../components/BottomNav'
 import TopNav from '../components/TopNav'
 import CreateFood from '../pages/food-partner/CreateFood'
 import Profile from '../pages/food-partner/Profile'
+import TasteProfilePage from '../pages/general/TasteProfilePage'
 
 // Layout with top + bottom nav
 const AppLayout = ({ children }) => (
@@ -35,6 +36,7 @@ const AppRoutes = () => {
         {/* App pages — with nav */}
         <Route path="/"                  element={<AppLayout><Home /></AppLayout>} />
         <Route path="/saved"             element={<AppLayout><Saved /></AppLayout>} />
+        <Route path="/taste-profile"     element={<AppLayout><TasteProfilePage /></AppLayout>} />
         <Route path="/create-food"       element={<AppLayout><CreateFood /></AppLayout>} />
         <Route path="/food-partner/:id"  element={<AppLayout><Profile /></AppLayout>} />
       </Routes>

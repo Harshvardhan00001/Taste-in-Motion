@@ -201,4 +201,27 @@ Two separate cookies are used so both roles can be active simultaneously:
 
 ---
 
+## 🚀 Context-Aware Food Discovery Platform — Upgrade Blueprint
 
+> **Product Direction:** Transform *Taste in Motion* from a food-reel application into a platform that helps users decide what to eat right now using taste, budget, location, time, and situational context.
+>
+> **Core Loop:** $\text{Discover} \to \text{Understand} \to \text{Decide} \to \text{Visit/Order/Save} \to \text{Learn} \to \text{Improve}$
+
+### 🎯 Key Product Innovations
+1. **"I'm Hungry" Mode:** Instant context collector where users specify budget (e.g. ₹300), available time (e.g. 45 mins), distance radius, and mood/cravings to receive ranked recommendations.
+2. **Dish-First Discovery:** Dishes treated as first-class entities with city-wide price benchmarks and multi-restaurant side-by-side comparisons.
+3. **6-Factor Weighted Recommendation Engine:**
+   $$\text{Score} = 0.30 \cdot \text{TasteFit} + 0.20 \cdot \text{BudgetFit} + 0.20 \cdot \text{DistanceFit} + 0.15 \cdot \text{TimeFit} + 0.10 \cdot \text{Popularity} + 0.05 \cdot \text{Freshness}$$
+4. **Behavioral Taste Profiling:** Implicit preference tracking derived from `VIDEO_VIEW`, `VIDEO_COMPLETE`, `VIDEO_SKIP`, `LIKE`, `SAVE`, and `MAP_CLICK`.
+5. **Food Map & Food Trails:** Geospatial pin exploration with multi-stop collaborative itinerary planning and bill/time estimations.
+6. **Restaurant Partner Cockpit:** Data-dense analytics tracking video completion rates (VCR), menu clicks, and local demand heatmaps.
+
+### 🗺️ Implementation Roadmap (Phases 1 to 8)
+- **Phase 1 (P0):** Redesign Home/Reel Experience + Introduce Dish Data Model
+- **Phase 2 (P0):** "I'm Hungry" Mode + Budget, Location, and Time Constraints
+- **Phase 3 (P1):** Behavioral Event Telemetry + Dynamic Taste Profiling
+- **Phase 4 (P0):** Weighted Recommendation Engine + Explainable Reason Badges
+- **Phase 5 (P1):** Interactive Food Map + Side-by-Side Dish Comparison
+- **Phase 6 (P1):** Multi-Stop Food Trails + Collaborative Route Planning
+- **Phase 7 (P1):** Restaurant Partner Analytics Dashboard
+- **Phase 8 (P2):** Production Optimization, Cache Tuning & Observability

@@ -12,7 +12,7 @@ router.get('/save',
 )
 
 router.get("/",
-    AuthMiddleware.authUserMiddleware,
+    AuthMiddleware.optionalUserMiddleware,
     foodController.getFoodItems)
 
 router.post('/',

@@ -38,4 +38,20 @@ async function authUserMiddleware(req, res, next) {
     }
 }
 
-module.exports = { authFoodPartnerMiddleware, authUserMiddleware }
+async function optionalUserMiddleware(req, res, next) {
+    const token = req.cookies.userToken;
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const user = await userModel.findById(decoded.id || decoded._id);
+        req.user = user || null;
+    } catch (err) {
+        req.user = null;
+    }
+    next();
+}
+
+module.exports = { authFoodPartnerMiddleware, authUserMiddleware, optionalUserMiddleware }

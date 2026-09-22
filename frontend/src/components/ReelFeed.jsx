@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { Heart, Bookmark, MapPin, Compass, Clock, Flame, UtensilsCrossed, Star } from 'lucide-react'
 import '../styles/reels.css'
 
-const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' }) => {
+const ReelFeed = ({
+  items = [],
+  onLike,
+  onSave,
+  onAddToTrail,
+  emptyMessage = 'No food reels available.'
+}) => {
   const videoRefs = useRef(new Map())
+  const navigate = useNavigate()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -25,17 +33,20 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
   }, [items])
 
   const setVideoRef = (id) => (el) => {
-    if (!el) { videoRefs.current.delete(id); return }
+    if (!el) {
+      videoRefs.current.delete(id)
+      return
+    }
     videoRefs.current.set(id, el)
   }
 
-  // Safe number helper — prevents NaN from undefined fields
   const n = (val) => (isNaN(Number(val)) ? 0 : Number(val ?? 0))
 
   if (items.length === 0) {
     return (
       <div className="reels-page">
         <div className="empty-state">
+          <UtensilsCrossed size={36} className="empty-icon" />
           <p>{emptyMessage}</p>
         </div>
       </div>
@@ -45,86 +56,146 @@ const ReelFeed = ({ items = [], onLike, onSave, emptyMessage = 'No videos yet.' 
   return (
     <div className="reels-page">
       <div className="reels-feed" role="list">
-        {items.map((item) => (
-          <section key={item._id} className="reel" role="listitem">
-            <video
-              ref={setVideoRef(item._id)}
-              className="reel-video"
-              src={item.video}
-              muted
-              playsInline
-              loop
-              preload="metadata"
-            />
+        {items.map((item) => {
+          const dishId = item.dish?._id || item.dish || item._id
+          const partnerId = item.foodPartner?._id || item.foodPartner
+          const partnerName = item.foodPartner?.name || 'Local Kitchen'
+          const dishName = item.dish?.name || item.name
+          const price = item.price ?? 220
+          const prepTime = item.prepTimeMinutes ?? 20
+          const distance = item.distanceKm ?? 1.2
+          const reasonBadge = item.reasonBadge || '⚡ Context Match'
+          const spiceLevel = item.dish?.spiceLevel
 
-            <div className="reel-overlay">
-              <div className="reel-overlay-gradient" aria-hidden="true" />
+          return (
+            <section key={item._id} className="reel" role="listitem">
+              <video
+                ref={setVideoRef(item._id)}
+                className="reel-video"
+                src={item.video}
+                muted
+                playsInline
+                loop
+                preload="metadata"
+              />
 
-              {/* Right-side actions */}
-              <div className="reel-actions">
-                {/* Like */}
-                <div className="reel-action-group">
-                  <button
-                    onClick={onLike ? () => onLike(item) : undefined}
-                    className={`reel-action ${item.isLiked ? 'liked' : ''}`}
-                    aria-label="Like"
-                  >
-                    <svg width="22" height="22" viewBox="0 0 24 24"
-                      fill={item.isLiked ? 'currentColor' : 'none'}
-                      stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 22l7.8-8.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-                    </svg>
-                  </button>
-                  <span className="reel-action__count">{n(item.likeCount)}</span>
+              <div className="reel-overlay">
+                <div className="reel-overlay-gradient" aria-hidden="true" />
+
+                {/* Right-side quick action buttons */}
+                <div className="reel-actions">
+                  {/* Like Button */}
+                  <div className="reel-action-group">
+                    <button
+                      onClick={onLike ? () => onLike(item) : undefined}
+                      className={`reel-action ${item.isLiked ? 'liked' : ''}`}
+                      aria-label="Like"
+                      title="Like Reel"
+                    >
+                      <Heart size={22} fill={item.isLiked ? 'currentColor' : 'none'} />
+                    </button>
+                    <span className="reel-action__count">{n(item.likeCount)}</span>
+                  </div>
+
+                  {/* Bookmark / Save Button */}
+                  <div className="reel-action-group">
+                    <button
+                      onClick={onSave ? () => onSave(item) : undefined}
+                      className={`reel-action ${item.isSaved ? 'saved' : ''}`}
+                      aria-label="Save"
+                      title="Save to Collection"
+                    >
+                      <Bookmark size={22} fill={item.isSaved ? 'currentColor' : 'none'} />
+                    </button>
+                    <span className="reel-action__count">{n(item.savesCount)}</span>
+                  </div>
+
+                  {/* Add to Food Trail Action (PRD 6.2 & 6.7) */}
+                  <div className="reel-action-group">
+                    <button
+                      onClick={
+                        onAddToTrail
+                          ? () => onAddToTrail(item)
+                          : () => navigate(`/trails?addDish=${dishId}`)
+                      }
+                      className="reel-action trail-btn"
+                      aria-label="Add to Trail"
+                      title="Add to Food Trail"
+                    >
+                      <Compass size={22} />
+                    </button>
+                    <span className="reel-action__count">Trail</span>
+                  </div>
                 </div>
 
-                {/* Save */}
-                <div className="reel-action-group">
-                  <button
-                    onClick={onSave ? () => onSave(item) : undefined}
-                    className={`reel-action ${item.isSaved ? 'saved' : ''}`}
-                    aria-label="Save"
-                  >
-                    <svg width="22" height="22" viewBox="0 0 24 24"
-                      fill={item.isSaved ? 'currentColor' : 'none'}
-                      stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" />
-                    </svg>
-                  </button>
-                  <span className="reel-action__count">{n(item.savesCount)}</span>
-                </div>
+                {/* Bottom Decision & Context Card (PRD 6.2) */}
+                <div className="reel-content">
+                  {/* Context-Aware Reason Badge (PRD FR-06) */}
+                  <div className="reel-reason-badge">
+                    <span>{reasonBadge}</span>
+                  </div>
 
-                {/* Comments */}
-                <div className="reel-action-group">
-                  <button className="reel-action" aria-label="Comments">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2"
-                      strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-                    </svg>
-                  </button>
-                  <span className="reel-action__count">
-                    {n(item.commentsCount ?? (Array.isArray(item.comments) ? item.comments.length : 0))}
-                  </span>
+                  {/* Dish Title & Price Pill */}
+                  <div className="reel-dish-header">
+                    <h2 className="reel-dish-title">{dishName}</h2>
+                    <span className="reel-price-pill">₹{price}</span>
+                  </div>
+
+                  {/* Situational Context Tags: Distance, Prep Time, Spice */}
+                  <div className="reel-context-tags">
+                    <span className="context-chip">
+                      <Clock size={12} /> {prepTime} mins
+                    </span>
+                    <span className="context-chip">
+                      <MapPin size={12} /> {distance} km
+                    </span>
+                    {spiceLevel && (
+                      <span className={`context-chip spice-${spiceLevel}`}>
+                        <Flame size={12} /> {spiceLevel}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Restaurant Info */}
+                  <div className="reel-partner-row">
+                    <Link
+                      to={partnerId ? `/food-partner/${partnerId}` : '#'}
+                      className="partner-link"
+                    >
+                      <span className="partner-name">{partnerName}</span>
+                      {item.foodPartner?.rating && (
+                        <span className="partner-rating">
+                          <Star size={11} fill="#fbbf24" stroke="#fbbf24" />
+                          {item.foodPartner.rating}
+                        </span>
+                      )}
+                    </Link>
+                  </div>
+
+                  {/* Description */}
+                  {item.description && (
+                    <p className="reel-description" title={item.description}>
+                      {item.description}
+                    </p>
+                  )}
+
+                  {/* Primary Decision Actions (PRD 6.2: View Dish, Compare, Directions) */}
+                  <div className="reel-decision-actions">
+                    <Link to={`/dish/${dishId}`} className="decision-btn decision-btn-primary">
+                      View Dish
+                    </Link>
+                    <Link to={`/dish/${dishId}?tab=compare`} className="decision-btn decision-btn-secondary">
+                      Compare Stores
+                    </Link>
+                    <Link to={`/map?partnerId=${partnerId}`} className="decision-btn decision-btn-outline" title="Directions on Map">
+                      <MapPin size={14} /> Map
+                    </Link>
+                  </div>
                 </div>
               </div>
-
-              {/* Bottom content */}
-              <div className="reel-content">
-                <p className="reel-description" title={item.description}>
-                  {item.description}
-                </p>
-                {item.foodPartner && (
-                  <Link className="reel-btn" to={`/food-partner/${item.foodPartner}`}>
-                    Visit store
-                  </Link>
-                )}
-              </div>
-            </div>
-          </section>
-        ))}
+            </section>
+          )
+        })}
       </div>
     </div>
   )

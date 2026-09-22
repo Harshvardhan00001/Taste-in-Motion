@@ -62,6 +62,14 @@ const TopNav = () => {
           🍽️ <span>Taste</span>
         </Link>
 
+        {/* ⚡ I'm Hungry Quick Launcher */}
+        <button
+          className="top-nav__hungry-btn"
+          onClick={() => window.dispatchEvent(new Event('open_im_hungry'))}
+        >
+          ⚡ I'm Hungry
+        </button>
+
         {/* Right side */}
         <div className="top-nav__right" ref={menuRef}>
           {user ? (
@@ -104,6 +112,14 @@ const TopNav = () => {
                       <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
                     </svg>
                     Saved
+                  </Link>
+                  <Link to="/taste-profile" className="top-nav__dropdown-item"
+                    onClick={() => setMenuOpen(false)}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    Taste Profile
                   </Link>
                   <div className="top-nav__dropdown-divider" />
                   <button className="top-nav__dropdown-item top-nav__dropdown-item--danger"
