@@ -1,6 +1,7 @@
 const foodModel = require('../models/food.model');
 const dishModel = require('../models/dish.model');
 const dishAvailabilityModel = require('../models/dishAvailability.model');
+const foodpartnerModel = require('../models/foodpartner.model');
 const likeModel = require('../models/likes.model');
 const saveModel = require('../models/save.model');
 const recommendationService = require('../services/recommendation.service');
@@ -284,7 +285,150 @@ async function getDiscoveryFeed(req, res) {
     }
 }
 
+/**
+ * GET /api/discovery/map/nearby
+ * Geospatial Map API returning geolocated partner pins with top dishes and video reels
+ */
+async function getNearbyMapPins(req, res) {
+    try {
+        const userLat = req.query.lat ? parseFloat(req.query.lat) : 28.6315;
+        const userLng = req.query.lng ? parseFloat(req.query.lng) : 77.2167;
+        const radiusKm = req.query.radiusKm ? parseFloat(req.query.radiusKm) : 15;
+        const filterCategory = req.query.category ? req.query.category.toLowerCase() : 'all';
+        const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : Infinity;
+
+        // Fetch all active partners with location coordinates
+        const partners = await foodpartnerModel.find({
+            'location.coordinates': { $exists: true, $ne: [] }
+        });
+
+        // Fetch all availabilities with populated dishes and all foods
+        const [availabilities, foods] = await Promise.all([
+            dishAvailabilityModel.find({ isAvailable: true }).populate('dish'),
+            foodModel.find({}).select('dish foodPartner video name')
+        ]);
+
+        // Group availabilities and videos by restaurant ID
+        const availMapByRestaurant = new Map();
+        for (const av of availabilities) {
+            const rId = av.restaurant.toString();
+            if (!availMapByRestaurant.has(rId)) availMapByRestaurant.set(rId, []);
+            availMapByRestaurant.get(rId).push(av);
+        }
+
+        const foodMapByRestaurantAndDish = new Map();
+        for (const f of foods) {
+            if (f.foodPartner && f.dish) {
+                const key = `${f.foodPartner.toString()}_${f.dish.toString()}`;
+                foodMapByRestaurantAndDish.set(key, f);
+            }
+        }
+
+        const pins = [];
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return Number((R * c).toFixed(1));
+        }
+
+        for (const partner of partners) {
+            const [lng, lat] = partner.location.coordinates;
+            const distanceKm = calculateDistance(userLat, userLng, lat, lng);
+
+            if (distanceKm > radiusKm) continue;
+
+            const partnerAvails = availMapByRestaurant.get(partner._id.toString()) || [];
+
+            // Apply category / price filter to partner dishes
+            const filteredDishes = partnerAvails.filter(av => {
+                const d = av.dish;
+                if (!d) return false;
+                if (av.price > maxPrice) return false;
+
+                if (filterCategory === 'spicy') {
+                    return d.spiceLevel === 'spicy' || d.spiceLevel === 'extra-spicy';
+                }
+                if (filterCategory === 'veg') {
+                    return d.isVegetarian === true;
+                }
+                if (filterCategory === 'fast') {
+                    return (av.prepTimeMinutes || 20) <= 15;
+                }
+                if (filterCategory === 'budget') {
+                    return av.price <= 250;
+                }
+                if (filterCategory !== 'all') {
+                    const c = (d.cuisine || '').toLowerCase();
+                    return c.includes(filterCategory);
+                }
+                return true;
+            });
+
+            if (filteredDishes.length === 0 && filterCategory !== 'all') {
+                continue;
+            }
+
+            // Pick the top dish (specialty first, or highest price/relevance)
+            const topAvail = filteredDishes.find(a => a.isSpecialty) || filteredDishes[0] || partnerAvails[0];
+            const topDishObj = topAvail?.dish;
+
+            let linkedFood = null;
+            if (topDishObj) {
+                linkedFood = foodMapByRestaurantAndDish.get(`${partner._id.toString()}_${topDishObj._id.toString()}`);
+            }
+
+            pins.push({
+                partnerId: partner._id,
+                restaurantName: partner.name,
+                address: partner.address,
+                city: partner.city,
+                rating: partner.rating || 4.7,
+                phone: partner.phone,
+                operatingHours: partner.operatingHours,
+                cuisines: partner.cuisines || [],
+                coordinates: [lng, lat],
+                distanceKm,
+                topDish: topDishObj ? {
+                    dishId: topDishObj._id,
+                    name: topDishObj.name,
+                    cuisine: topDishObj.cuisine,
+                    spiceLevel: topDishObj.spiceLevel,
+                    isVegetarian: topDishObj.isVegetarian,
+                    imageUrl: topDishObj.imageUrl,
+                    price: topAvail.price,
+                    prepTimeMinutes: topAvail.prepTimeMinutes || 20,
+                    isSpecialty: topAvail.isSpecialty || false,
+                    foodId: linkedFood?._id || null,
+                    videoUrl: linkedFood?.video || null
+                } : null,
+                availableDishesCount: partnerAvails.length
+            });
+        }
+
+        // Sort pins by distance from user
+        pins.sort((a, b) => a.distanceKm - b.distanceKm);
+
+        return res.status(200).json({
+            message: "Nearby map pins retrieved successfully",
+            count: pins.length,
+            userLocation: { lat: userLat, lng: userLng },
+            pins
+        });
+    } catch (err) {
+        console.error("Error in getNearbyMapPins:", err);
+        return res.status(500).json({ message: "Server error fetching map pins", error: err.message });
+    }
+}
+
 module.exports = {
     imHungrySearch,
-    getDiscoveryFeed
+    getDiscoveryFeed,
+    getNearbyMapPins
 };

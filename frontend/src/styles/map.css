@@ -1,0 +1,514 @@
+/* ==========================================================================
+   Food Map & Geospatial Discovery Styles
+   PRD Section 5: Phase 5
+   ========================================================================== */
+
+.food-map-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #0b0f17;
+  color: #f8fafc;
+}
+
+/* Map Container */
+.map-canvas-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: #0f172a;
+}
+
+/* Leaflet Container Overrides */
+.leaflet-container {
+  background: #090d16 !important;
+  font-family: inherit;
+}
+
+.leaflet-control-zoom {
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+  margin-top: 76px !important;
+  margin-right: 18px !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.88) !important;
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(8px);
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  transition: all 0.2s ease;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #ff5722 !important;
+  color: #ffffff !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(11, 15, 23, 0.75) !important;
+  color: #64748b !important;
+  font-size: 0.65rem !important;
+  backdrop-filter: blur(6px);
+}
+
+.leaflet-control-attribution a {
+  color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   Custom Food Marker Pins
+   ========================================================================== */
+
+.food-pin-wrapper {
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.food-pin-wrapper:hover {
+  transform: translate(-50%, -108%) scale(1.08);
+}
+
+.food-pin-wrapper.active-pin {
+  transform: translate(-50%, -112%) scale(1.16);
+  z-index: 1000 !important;
+}
+
+.food-pin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1.5px solid rgba(255, 87, 34, 0.6);
+  border-radius: 999px;
+  padding: 4px 10px 4px 6px;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(255, 87, 34, 0.25);
+  white-space: nowrap;
+}
+
+.food-pin-wrapper.active-pin .food-pin-pill {
+  background: linear-gradient(135deg, #ff5722, #e64a19);
+  border-color: #ff8a65;
+  box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
+}
+
+.pin-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 0.8rem;
+}
+
+.pin-price {
+  letter-spacing: -0.2px;
+}
+
+.food-pin-arrow {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid #1e293b;
+  margin-top: -1px;
+}
+
+.food-pin-wrapper.active-pin .food-pin-arrow {
+  border-top-color: #e64a19;
+}
+
+/* User Location Pulse Marker */
+.user-pulse-marker {
+  width: 16px;
+  height: 16px;
+  background: #38bdf8;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 16px #38bdf8;
+  position: relative;
+}
+
+.user-pulse-marker::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.35);
+  animation: pulse-ring 2s infinite ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ==========================================================================
+   Map Overlays & Filter Chips
+   ========================================================================== */
+
+.map-header-bar {
+  position: absolute;
+  top: 70px;
+  left: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.map-filter-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px;
+  pointer-events: auto;
+  scrollbar-width: none;
+}
+
+.map-filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.map-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.map-filter-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.map-filter-btn.active {
+  background: #ff5722;
+  color: #ffffff;
+  border-color: #ff7849;
+  box-shadow: 0 4px 18px rgba(255, 87, 34, 0.5);
+}
+
+.map-locate-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.map-locate-btn:hover {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #38bdf8;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Floating Bottom Preview Card
+   ========================================================================== */
+
+.map-preview-drawer {
+  position: absolute;
+  bottom: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 580px;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(16px);
+  animation: slide-up 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slide-up {
+  from { transform: translate(-50%, 40px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.drawer-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 2;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.drawer-content-grid {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 16px;
+}
+
+.drawer-media-box {
+  width: 100px;
+  height: 120px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background: #1e293b;
+  flex-shrink: 0;
+}
+
+.drawer-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.drawer-play-pill {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.drawer-info-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.drawer-kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #ff7849;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.drawer-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.drawer-dish-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-price-pill {
+  background: linear-gradient(135deg, #ff5722, #f4511e);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 900;
+  padding: 3px 9px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+  flex-shrink: 0;
+}
+
+.drawer-meta-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.drawer-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.drawer-partner-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drawer-partner-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.drawer-partner-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+
+.drawer-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.drawer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.drawer-btn-primary {
+  background: #ff5722;
+  color: #ffffff;
+}
+
+.drawer-btn-primary:hover {
+  background: #e64a19;
+  box-shadow: 0 4px 14px rgba(255, 87, 34, 0.4);
+}
+
+.drawer-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.drawer-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.drawer-btn-icon {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.drawer-btn-icon:hover {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .map-preview-drawer {
+    bottom: 68px;
+    width: calc(100% - 24px);
+    padding: 14px;
+    border-radius: 16px;
+  }
+  .drawer-content-grid {
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+  }
+  .drawer-media-box {
+    width: 80px;
+    height: 100px;
+  }
+  .drawer-dish-title {
+    font-size: 1.05rem;
+  }
+  .drawer-actions-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .drawer-btn-icon {
+    display: none;
+  }
+}
