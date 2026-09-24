@@ -105,6 +105,15 @@ const TopNav = () => {
                       Upload Food
                     </Link>
                   )}
+                  <Link to="/trails" className="top-nav__dropdown-item"
+                    onClick={() => setMenuOpen(false)}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                    </svg>
+                    Food Trails
+                  </Link>
                   <Link to="/saved" className="top-nav__dropdown-item"
                     onClick={() => setMenuOpen(false)}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none"

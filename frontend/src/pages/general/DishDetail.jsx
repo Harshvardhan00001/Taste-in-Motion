@@ -18,6 +18,7 @@ import {
   Zap,
   Info
 } from 'lucide-react';
+import AddToTrailModal from '../../components/AddToTrailModal';
 import '../../styles/dish-detail.css';
 
 const DishDetail = () => {
@@ -31,6 +32,8 @@ const DishDetail = () => {
   const [dishData, setDishData] = useState(null);
   const [compareData, setCompareData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isTrailModalOpen, setIsTrailModalOpen] = useState(false);
+  const [selectedTrailItem, setSelectedTrailItem] = useState(null);
 
   // Sync tab with URL
   const handleTabChange = (tab) => {
@@ -302,7 +305,15 @@ const DishDetail = () => {
                           );
                           return;
                         }
-                        navigate(`/trails?addDish=${dish._id}`);
+                        setSelectedTrailItem({
+                          dish: dish,
+                          dishId: dish._id,
+                          restaurantId: item.restaurantId,
+                          restaurantName: item.restaurantName,
+                          price: item.price,
+                          prepTimeMinutes: item.prepTimeMinutes
+                        });
+                        setIsTrailModalOpen(true);
                       } catch {
                         navigate('/user/login');
                       }
@@ -352,6 +363,13 @@ const DishDetail = () => {
           )}
         </div>
       )}
+
+      {/* Add To Trail Modal */}
+      <AddToTrailModal
+        isOpen={isTrailModalOpen}
+        onClose={() => setIsTrailModalOpen(false)}
+        item={selectedTrailItem}
+      />
     </div>
   );
 };

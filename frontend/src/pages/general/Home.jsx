@@ -3,6 +3,7 @@ import axios from 'axios';
 import ReelContextPresentation from '../../components/ReelContextPresentation';
 import ImHungryModal from '../../components/ImHungryModal';
 import AuthRequiredModal from '../../components/AuthRequiredModal';
+import AddToTrailModal from '../../components/AddToTrailModal';
 import { Sparkles, X, Zap } from 'lucide-react';
 import '../../styles/home-filter-bar.css';
 
@@ -15,6 +16,10 @@ const Home = () => {
   // Auth Modal State for Guest Users
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authActionName, setAuthActionName] = useState('perform this action');
+
+  // Trail Modal State
+  const [isTrailModalOpen, setIsTrailModalOpen] = useState(false);
+  const [selectedTrailItem, setSelectedTrailItem] = useState(null);
 
   // Helper check if user is logged in
   const checkIsLoggedIn = () => {
@@ -144,6 +149,16 @@ const Home = () => {
     }
   }
 
+  const handleOpenAddToTrail = (item) => {
+    if (!checkIsLoggedIn()) {
+      setAuthActionName('add dishes to food trails');
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setSelectedTrailItem(item);
+    setIsTrailModalOpen(true);
+  };
+
   return (
     <div className="home-feed-wrapper">
       {/* Active Context Filter Bar */}
@@ -175,6 +190,7 @@ const Home = () => {
         items={videos}
         onLike={likeVideo}
         onSave={saveVideo}
+        onAddToTrail={handleOpenAddToTrail}
         emptyMessage={
           activeFilters
             ? "No food recommendations match your active budget or craving filters."
@@ -188,6 +204,13 @@ const Home = () => {
         onClose={() => setIsHungryModalOpen(false)}
         onSubmitFilters={handleApplyFilters}
         initialFilters={activeFilters}
+      />
+
+      {/* Food Trail Modal */}
+      <AddToTrailModal
+        isOpen={isTrailModalOpen}
+        onClose={() => setIsTrailModalOpen(false)}
+        item={selectedTrailItem}
       />
 
       {/* Auth Prompt Modal for Guest Users */}

@@ -14,6 +14,7 @@ import Profile from '../pages/food-partner/Profile'
 import TasteProfilePage from '../pages/general/TasteProfilePage'
 import FoodMap from '../pages/general/FoodMap'
 import DishDetail from '../pages/general/DishDetail'
+import FoodTrails from '../pages/general/FoodTrails'
 
 // Layout with top + bottom nav
 const AppLayout = ({ children }) => (
@@ -39,6 +40,7 @@ const AppRoutes = () => {
         <Route path="/"                  element={<AppLayout><Home /></AppLayout>} />
         <Route path="/map"                element={<AppLayout><FoodMap /></AppLayout>} />
         <Route path="/dish/:id"          element={<AppLayout><DishDetail /></AppLayout>} />
+        <Route path="/trails"            element={<AppLayout><FoodTrails /></AppLayout>} />
         <Route path="/saved"             element={<AppLayout><Saved /></AppLayout>} />
         <Route path="/taste-profile"     element={<AppLayout><TasteProfilePage /></AppLayout>} />
         <Route path="/create-food"       element={<AppLayout><CreateFood /></AppLayout>} />

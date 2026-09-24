@@ -28,6 +28,17 @@ const BottomNav = () => {
           <span className="bottom-nav__label">Map</span>
         </NavLink>
 
+        <NavLink to="/trails" className={({ isActive }) => `bottom-nav__item ${isActive ? 'is-active' : ''}`}>
+          <span className="bottom-nav__icon" aria-hidden="true">
+            {/* compass / trail icon */}
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+            </svg>
+          </span>
+          <span className="bottom-nav__label">Trails</span>
+        </NavLink>
+
         <NavLink to="/saved" className={({ isActive }) => `bottom-nav__item ${isActive ? 'is-active' : ''}`}>
           <span className="bottom-nav__icon" aria-hidden="true">
             {/* bookmark icon */}
