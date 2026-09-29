@@ -60,6 +60,7 @@ const ReelContextPresentation = ({
   }
 
   const currentItem = items[currentIndex];
+  const nextItem = items.length > 1 ? items[(currentIndex + 1) % items.length] : null;
   const formattedIndex = String(currentIndex + 1).padStart(2, '0');
   const formattedTotal = String(items.length).padStart(2, '0');
 
@@ -143,6 +144,18 @@ const ReelContextPresentation = ({
             />
           </div>
         </div>
+
+        {/* Invisible video buffer preloader for next reel in queue */}
+        {nextItem && nextItem.video && (
+          <video
+            key={`preload-${nextItem._id || nextItem.id}`}
+            src={nextItem.video}
+            preload="auto"
+            muted
+            style={{ display: 'none' }}
+            aria-hidden="true"
+          />
+        )}
       </div>
     </div>
   );

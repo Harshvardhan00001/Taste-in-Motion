@@ -15,7 +15,8 @@ router.get('/', async (req, res) => {
 
     return res.status(200).json({
       message: 'Taste profile retrieved successfully',
-      profile
+      profile,
+      tasteProfile: profile
     });
   } catch (err) {
     console.error('TasteProfile route error:', err.message);

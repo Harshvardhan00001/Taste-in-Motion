@@ -15,6 +15,7 @@ import TasteProfilePage from '../pages/general/TasteProfilePage'
 import FoodMap from '../pages/general/FoodMap'
 import DishDetail from '../pages/general/DishDetail'
 import FoodTrails from '../pages/general/FoodTrails'
+import PartnerAnalytics from '../pages/food-partner/PartnerAnalytics'
 
 // Layout with top + bottom nav
 const AppLayout = ({ children }) => (
@@ -45,6 +46,10 @@ const AppRoutes = () => {
         <Route path="/taste-profile"     element={<AppLayout><TasteProfilePage /></AppLayout>} />
         <Route path="/create-food"       element={<AppLayout><CreateFood /></AppLayout>} />
         <Route path="/food-partner/:id"  element={<AppLayout><Profile /></AppLayout>} />
+        <Route path="/partner/analytics" element={<AppLayout><PartnerAnalytics /></AppLayout>} />
+
+        {/* Catch-all fallback */}
+        <Route path="*"                  element={<AppLayout><Home /></AppLayout>} />
       </Routes>
     </Router>
   )

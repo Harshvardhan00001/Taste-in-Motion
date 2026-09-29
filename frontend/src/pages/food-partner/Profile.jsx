@@ -1,6 +1,6 @@
-import React, { useState, useEffect, use } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../../styles/profile.css'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Profile = () => {
@@ -43,6 +43,22 @@ const Profile = () => {
                         <span className="profile-stat-label">customer served</span>
                         <span className="profile-stat-value">{profile?.customersServed}</span>
                     </div>
+                    <Link
+                        to={`/partner/analytics?partnerId=${id}`}
+                        className="profile-stat"
+                        role="listitem"
+                        style={{
+                            textDecoration: 'none',
+                            background: 'linear-gradient(135deg, rgba(255, 87, 34, 0.22), rgba(244, 63, 94, 0.22))',
+                            border: '1px solid #ff5722',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                        title="View Partner Analytics Cockpit"
+                    >
+                        <span className="profile-stat-label" style={{ color: '#ff784e', fontWeight: 700 }}>📊 Performance</span>
+                        <span className="profile-stat-value" style={{ fontSize: '0.9rem', color: '#ffffff' }}>Analytics Cockpit</span>
+                    </Link>
                 </div>
             </section>
 

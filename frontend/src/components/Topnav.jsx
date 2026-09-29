@@ -96,14 +96,26 @@ const TopNav = () => {
                   </div>
                   <div className="top-nav__dropdown-divider" />
                   {user.role === 'partner' && (
-                    <Link to="/create-food" className="top-nav__dropdown-item"
-                      onClick={() => setMenuOpen(false)}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" strokeWidth="2">
-                        <path d="M12 5v14M5 12h14"/>
-                      </svg>
-                      Upload Food
-                    </Link>
+                    <>
+                      <Link to="/partner/analytics" className="top-nav__dropdown-item"
+                        onClick={() => setMenuOpen(false)}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2">
+                          <line x1="18" y1="20" x2="18" y2="10"/>
+                          <line x1="12" y1="20" x2="12" y2="4"/>
+                          <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics Cockpit
+                      </Link>
+                      <Link to="/create-food" className="top-nav__dropdown-item"
+                        onClick={() => setMenuOpen(false)}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2">
+                          <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Upload Food
+                      </Link>
+                    </>
                   )}
                   <Link to="/trails" className="top-nav__dropdown-item"
                     onClick={() => setMenuOpen(false)}>

@@ -169,7 +169,8 @@ async function getTrails(req, res) {
   try {
     await ensureCuratedTrails();
 
-    const targetUserId = req.query.userId || req.user?._id;
+    const { filter, userId } = req.query;
+    const targetUserId = userId || req.user?._id;
     let query = { isPublic: true };
 
     if (filter === 'curated') {
