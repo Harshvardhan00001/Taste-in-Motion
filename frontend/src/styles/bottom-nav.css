@@ -1,24 +1,37 @@
-/* ── Bottom Nav ── */
+@import './theme.css';
+
+/* ── Mobile Floating Glass Bottom Dock ── */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 12px;
+  left: 16px;
+  right: 16px;
   z-index: 100;
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255,255,255,0.07);
+  background: rgba(14, 18, 26, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 0, 0, 0.4);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  margin: 0 auto;
+  max-width: 480px;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+/* Hide floating bottom dock on desktop viewports since top-nav has full menu */
+@media (min-width: 861px) {
+  .bottom-nav {
+    display: none;
+  }
 }
 
 .bottom-nav__inner {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-around;
-  max-width: 500px;
-  margin: 0 auto;
-  height: 60px;
+  height: 56px;
+  padding: 0 6px;
 }
 
 .bottom-nav__item {
@@ -28,46 +41,48 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-  color: rgba(255,255,255,0.38);
+  color: var(--color-text-muted);
   text-decoration: none;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  transition: color 150ms;
+  transition: all var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius-sm);
+  padding: 4px 0;
+  position: relative;
 }
 
-.bottom-nav__item:hover { color: rgba(255,255,255,0.7); }
+.bottom-nav__item:hover {
+  color: var(--color-text);
+}
 
 .bottom-nav__item.is-active {
-  color: #ff5722;
-  text-shadow: 0 0 10px rgba(255, 87, 34, 0.4);
+  color: var(--color-accent);
 }
 
 .bottom-nav__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 150ms;
+  transition: transform var(--transition-spring);
 }
 
 .bottom-nav__item.is-active .bottom-nav__icon {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.1);
+  color: var(--color-accent);
+  filter: drop-shadow(0 2px 8px rgba(255, 87, 34, 0.6));
 }
 
-/* Active dot indicator */
+/* Glowing active dot under label */
 .bottom-nav__item.is-active::after {
   content: '';
-  display: block;
+  position: absolute;
+  bottom: 2px;
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff5722;
-  box-shadow: 0 0 6px rgba(255, 87, 34, 0.9);
-  margin-top: 1px;
-}
-
-@media (min-width: 768px) {
-  .bottom-nav__inner { max-width: 420px; }
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(255, 87, 34, 0.9);
 }

@@ -36,7 +36,7 @@ const UserLogin = () => {
     <div className="auth-page-wrapper">
       <div className="auth-card">
         <header>
-          <span className="auth-logo">🍽️ Taste in Motion</span>
+          <span className="auth-logo">Taste in Motion</span>
           <h1 className="auth-title">Welcome back</h1>
           <p className="auth-subtitle">Sign in to continue your food journey.</p>
         </header>

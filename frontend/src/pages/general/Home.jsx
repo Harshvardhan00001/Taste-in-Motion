@@ -4,7 +4,7 @@ import ReelContextPresentation from '../../components/ReelContextPresentation';
 import ImHungryModal from '../../components/ImHungryModal';
 import AuthRequiredModal from '../../components/AuthRequiredModal';
 import AddToTrailModal from '../../components/AddToTrailModal';
-import { Sparkles, X, Zap } from 'lucide-react';
+import { Flame, X, SlidersHorizontal } from 'lucide-react';
 import '../../styles/home-filter-bar.css';
 
 const Home = () => {
@@ -31,6 +31,24 @@ const Home = () => {
     }
   };
 
+  // Helper to get guest likes & saves
+  const getGuestLikes = () => {
+    try { return JSON.parse(localStorage.getItem('guest_likes') || '[]'); } catch { return []; }
+  };
+  const getGuestSaves = () => {
+    try { return JSON.parse(localStorage.getItem('guest_saves') || '[]'); } catch { return []; }
+  };
+
+  const mergeGuestInteractions = (items) => {
+    const guestLikes = new Set(getGuestLikes());
+    const guestSaves = new Set(getGuestSaves());
+    return items.map((v) => ({
+      ...v,
+      isLiked: !!v.isLiked || guestLikes.has(v._id),
+      isSaved: !!v.isSaved || guestSaves.has(v._id)
+    }));
+  };
+
   // Fetch personalized 6-factor discovery feed
   const fetchDefaultFeed = async () => {
     try {
@@ -40,12 +58,12 @@ const Home = () => {
         `http://localhost:3000/api/discovery/feed?guestSessionId=${encodeURIComponent(guestSessionId)}`,
         { withCredentials: true }
       );
-      setVideos(response.data.foodItems ?? []);
+      setVideos(mergeGuestInteractions(response.data.foodItems ?? []));
     } catch (err) {
       console.error("Discovery feed error, falling back to basic food feed:", err.response?.status);
       try {
         const fallbackRes = await axios.get("http://localhost:3000/api/food", { withCredentials: true });
-        setVideos(fallbackRes.data.foodItems ?? []);
+        setVideos(mergeGuestInteractions(fallbackRes.data.foodItems ?? []));
       } catch (fallbackErr) {
         console.error("Fallback error:", fallbackErr);
       }
@@ -85,7 +103,7 @@ const Home = () => {
         filters,
         { withCredentials: true }
       );
-      setVideos(response.data.foodItems ?? []);
+      setVideos(mergeGuestInteractions(response.data.foodItems ?? []));
     } catch (err) {
       console.error("Context search error:", err.response?.status);
     } finally {
@@ -100,52 +118,88 @@ const Home = () => {
   };
 
   async function likeVideo(item) {
-    if (!checkIsLoggedIn()) {
-      setAuthActionName('like dishes');
-      setIsAuthModalOpen(true);
-      return;
-    }
+    const isCurrentlyLiked = !!item.isLiked;
+    const newLiked = !isCurrentlyLiked;
+    const delta = newLiked ? 1 : -1;
+
+    // 1. Optimistic immediate UI update
+    setVideos((prev) =>
+      prev.map((v) =>
+        v._id === item._id
+          ? {
+              ...v,
+              likeCount: Math.max(0, (v.likeCount ?? 0) + delta),
+              isLiked: newLiked
+            }
+          : v
+      )
+    );
+
+    // 2. Persist in guest localStorage
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/food/like",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
-      const delta = response.data.like ? 1 : -1;
-      setVideos((prev) =>
-        prev.map((v) =>
-          v._id === item._id
-            ? { ...v, likeCount: Math.max(0, (v.likeCount ?? 0) + delta), isLiked: response.data.like }
-            : v
-        )
-      );
-    } catch (err) {
-      console.error("Like error:", err.response?.status);
+      const guestLikes = new Set(getGuestLikes());
+      if (newLiked) {
+        guestLikes.add(item._id);
+      } else {
+        guestLikes.delete(item._id);
+      }
+      localStorage.setItem('guest_likes', JSON.stringify([...guestLikes]));
+    } catch {}
+
+    // 3. Sync to backend database if logged in
+    if (checkIsLoggedIn()) {
+      try {
+        await axios.post(
+          "http://localhost:3000/api/food/like",
+          { foodId: item._id },
+          { withCredentials: true }
+        );
+      } catch (err) {
+        console.error("Backend like sync failed (kept local state):", err.response?.status);
+      }
     }
   }
 
   async function saveVideo(item) {
-    if (!checkIsLoggedIn()) {
-      setAuthActionName('save favorite dishes');
-      setIsAuthModalOpen(true);
-      return;
-    }
+    const isCurrentlySaved = !!item.isSaved;
+    const newSaved = !isCurrentlySaved;
+    const delta = newSaved ? 1 : -1;
+
+    // 1. Optimistic immediate UI update
+    setVideos((prev) =>
+      prev.map((v) =>
+        v._id === item._id
+          ? {
+              ...v,
+              savesCount: Math.max(0, (v.savesCount ?? 0) + delta),
+              isSaved: newSaved
+            }
+          : v
+      )
+    );
+
+    // 2. Persist in guest localStorage
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/food/save",
-        { foodId: item._id },
-        { withCredentials: true }
-      );
-      const delta = response.data.save ? 1 : -1;
-      setVideos((prev) =>
-        prev.map((v) =>
-          v._id === item._id
-            ? { ...v, savesCount: Math.max(0, (v.savesCount ?? 0) + delta), isSaved: response.data.save }
-            : v
-        )
-      );
-    } catch (err) {
-      console.error("Save error:", err.response?.status);
+      const guestSaves = new Set(getGuestSaves());
+      if (newSaved) {
+        guestSaves.add(item._id);
+      } else {
+        guestSaves.delete(item._id);
+      }
+      localStorage.setItem('guest_saves', JSON.stringify([...guestSaves]));
+    } catch {}
+
+    // 3. Sync to backend database if logged in
+    if (checkIsLoggedIn()) {
+      try {
+        await axios.post(
+          "http://localhost:3000/api/food/save",
+          { foodId: item._id },
+          { withCredentials: true }
+        );
+      } catch (err) {
+        console.error("Backend save sync failed (kept local state):", err.response?.status);
+      }
     }
   }
 
@@ -166,7 +220,7 @@ const Home = () => {
         <div className="active-filter-bar">
           <div className="filter-bar-left">
             <span className="active-filter-title">
-              <Zap size={14} className="active-zap" /> ACTIVE CONTEXT:
+              <SlidersHorizontal size={13} className="active-filter-icon" /> FILTERED TASTE:
             </span>
             <div className="active-filter-chips">
               <span className="filter-chip">💰 Max ₹{activeFilters.budget}</span>

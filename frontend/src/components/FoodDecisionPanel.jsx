@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CheckCircle2,
@@ -10,10 +10,41 @@ import {
   Bookmark,
   Store,
   Navigation,
-  Sparkles
+  ChefHat,
+  Share2
 } from 'lucide-react';
 
 const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const dishId = item.dish?._id || item.dish || item._id;
+    const shareUrl = `${window.location.origin}/dish/${dishId}`;
+    const dishName = item.dish?.name || item.name;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${dishName} • Taste in Motion`,
+          text: `Check out ${dishName} on Taste in Motion!`,
+          url: shareUrl
+        });
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+    } catch {
+      setCopied(true);
+    }
+    setTimeout(() => setCopied(false), 2000);
+  };
   const dishName = item.dish?.name || item.name;
   const category = (item.dish?.cuisine || 'STREET FOOD').toUpperCase();
   const spiceLevel = item.dish?.spiceLevel;
@@ -61,7 +92,7 @@ const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
         )}
         {reasonBadge && (
           <span className="panel-reason-pill" title={reasonBadge}>
-            <Sparkles size={11} /> {reasonBadge}
+            <Flame size={11} /> {reasonBadge}
           </span>
         )}
       </div>
@@ -97,8 +128,8 @@ const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
         {/* "Why Recommended?" Section (PRD Section 6 - P0 Feature) */}
         <div className="panel-section why-recommended-card">
           <div className="section-title-row">
-            <Sparkles size={14} className="title-icon spark-icon" />
-            <h3 className="panel-section-title">WHY RECOMMENDED?</h3>
+            <ChefHat size={14} className="title-icon chef-icon" />
+            <h3 className="panel-section-title">WHY WE LOVE THIS</h3>
           </div>
           <ul className="why-list">
             {whyRecommended.slice(0, 4).map((reason, idx) => (
@@ -207,19 +238,21 @@ const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
           </Link>
           <button
             onClick={() => {
-              try {
-                const user = JSON.parse(localStorage.getItem('auth_user'));
-                if (!user) {
-                  window.dispatchEvent(new CustomEvent('open_auth_prompt', { detail: { actionName: 'save favorite dishes' } }));
-                  return;
-                }
-              } catch {}
               if (onSave) onSave(item);
             }}
             className={`panel-btn panel-btn-outline ${item.isSaved ? 'active-saved' : ''}`}
+            title="Save Dish"
           >
             <Bookmark size={13} fill={item.isSaved ? 'currentColor' : 'none'} />
             {item.isSaved ? 'Saved' : 'Save'}
+          </button>
+          <button
+            onClick={handleShare}
+            className={`panel-btn panel-btn-outline ${copied ? 'active-saved' : ''}`}
+            title="Share Dish"
+          >
+            <Share2 size={13} />
+            {copied ? 'Copied' : 'Share'}
           </button>
           <button
             onClick={() => {
@@ -233,6 +266,7 @@ const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
               if (onAddToTrail) onAddToTrail(item);
             }}
             className="panel-btn panel-btn-outline"
+            title="Add to Trail"
           >
             <Compass size={13} /> + Trail
           </button>

@@ -1,3 +1,5 @@
+@import './theme.css';
+
 /* ==========================================================================
    Canonical Dish Details & Multi-Restaurant Comparison Styles
    PRD Section 4 & 5: Phase 5
@@ -6,8 +8,9 @@
 .dish-detail-page {
   min-height: 100vh;
   min-height: 100dvh;
-  background-color: #0b0f17;
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-stack);
   padding: 72px 16px 88px;
   max-width: 1080px;
   margin: 0 auto;

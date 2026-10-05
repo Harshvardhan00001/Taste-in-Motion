@@ -1,6 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import {
+  Flame,
+  Compass,
+  MapPin,
+  Bookmark,
+  BarChart3,
+  PlusCircle,
+  LogOut,
+  ChevronDown,
+  User,
+  UtensilsCrossed
+} from 'lucide-react'
 import '../styles/top-nav.css'
 
 const TopNav = () => {
@@ -51,117 +63,153 @@ const TopNav = () => {
   }
 
   const displayName = user?.fullName || user?.name || user?.email || ''
-  const roleBadge = user?.role === 'partner' ? 'Partner' : 'User'
+  const roleBadge = user?.role === 'partner' ? 'Kitchen Partner' : 'Food Explorer'
   const initials = getInitials(displayName)
 
   return (
     <header className="top-nav">
       <div className="top-nav__inner">
-        {/* Logo */}
+        {/* Brand Logo */}
         <Link to="/" className="top-nav__logo">
-          🍽️ <span>Taste</span>
+          <div className="top-nav__logo-icon">
+            <UtensilsCrossed size={18} strokeWidth={2.4} />
+          </div>
+          <div className="top-nav__logo-text">
+            <span>Taste</span>
+            <span className="top-nav__logo-suffix">in motion</span>
+          </div>
         </Link>
 
-        {/* ⚡ I'm Hungry Quick Launcher */}
-        <button
-          className="top-nav__hungry-btn"
-          onClick={() => window.dispatchEvent(new Event('open_im_hungry'))}
-        >
-          ⚡ I'm Hungry
-        </button>
+        {/* Desktop Navigation Links */}
+        <nav className="top-nav__desktop-menu" aria-label="Main Navigation">
+          <NavLink to="/" end className={({ isActive }) => `top-nav__link ${isActive ? 'is-active' : ''}`}>
+            Feed
+          </NavLink>
+          <NavLink to="/map" className={({ isActive }) => `top-nav__link ${isActive ? 'is-active' : ''}`}>
+            Map
+          </NavLink>
+          <NavLink to="/trails" className={({ isActive }) => `top-nav__link ${isActive ? 'is-active' : ''}`}>
+            Food Trails
+          </NavLink>
+          <NavLink to="/saved" className={({ isActive }) => `top-nav__link ${isActive ? 'is-active' : ''}`}>
+            Saved
+          </NavLink>
+          <NavLink to="/taste-profile" className={({ isActive }) => `top-nav__link ${isActive ? 'is-active' : ''}`}>
+            Taste Profile
+          </NavLink>
+        </nav>
 
-        {/* Right side */}
-        <div className="top-nav__right" ref={menuRef}>
-          {user ? (
-            <div className="top-nav__profile" onClick={() => setMenuOpen(o => !o)}>
-              <div className="top-nav__avatar">{initials}</div>
-              <div className="top-nav__user-info">
-                <span className="top-nav__name">{displayName.split(' ')[0]}</span>
-                <span className="top-nav__role">{roleBadge}</span>
-              </div>
-              <svg className={`top-nav__chevron ${menuOpen ? 'open' : ''}`}
-                width="14" height="14" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
+        {/* Right Section: I'm Hungry + Profile / Auth */}
+        <div className="top-nav__right-group">
+          {/* Craving Discovery Quick Launcher */}
+          <button
+            className="top-nav__hungry-btn"
+            onClick={() => window.dispatchEvent(new Event('open_im_hungry'))}
+            title="Open situational context search"
+          >
+            <Flame size={14} className="hungry-flame-icon" />
+            <span>I'm Hungry</span>
+          </button>
 
-              {menuOpen && (
-                <div className="top-nav__dropdown">
-                  <div className="top-nav__dropdown-header">
-                    <div className="top-nav__avatar top-nav__avatar--lg">{initials}</div>
-                    <div>
-                      <div className="top-nav__dropdown-name">{displayName}</div>
-                      <div className="top-nav__dropdown-role">{roleBadge}</div>
-                    </div>
-                  </div>
-                  <div className="top-nav__dropdown-divider" />
-                  {user.role === 'partner' && (
-                    <>
-                      <Link to="/partner/analytics" className="top-nav__dropdown-item"
-                        onClick={() => setMenuOpen(false)}>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2">
-                          <line x1="18" y1="20" x2="18" y2="10"/>
-                          <line x1="12" y1="20" x2="12" y2="4"/>
-                          <line x1="6" y1="20" x2="6" y2="14"/>
-                        </svg>
-                        Analytics Cockpit
-                      </Link>
-                      <Link to="/create-food" className="top-nav__dropdown-item"
-                        onClick={() => setMenuOpen(false)}>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2">
-                          <path d="M12 5v14M5 12h14"/>
-                        </svg>
-                        Upload Food
-                      </Link>
-                    </>
-                  )}
-                  <Link to="/trails" className="top-nav__dropdown-item"
-                    onClick={() => setMenuOpen(false)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-                    </svg>
-                    Food Trails
-                  </Link>
-                  <Link to="/saved" className="top-nav__dropdown-item"
-                    onClick={() => setMenuOpen(false)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2">
-                      <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>
-                    </svg>
-                    Saved
-                  </Link>
-                  <Link to="/taste-profile" className="top-nav__dropdown-item"
-                    onClick={() => setMenuOpen(false)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    Taste Profile
-                  </Link>
-                  <div className="top-nav__dropdown-divider" />
-                  <button className="top-nav__dropdown-item top-nav__dropdown-item--danger"
-                    onClick={handleLogout}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2">
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                      <polyline points="16 17 21 12 16 7"/>
-                      <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    Sign Out
-                  </button>
+          {/* User Profile or Auth Buttons */}
+          <div className="top-nav__user-section" ref={menuRef}>
+            {user ? (
+              <div className="top-nav__profile-trigger" onClick={() => setMenuOpen(o => !o)}>
+                <div className="top-nav__avatar">{initials}</div>
+                <div className="top-nav__user-meta">
+                  <span className="top-nav__user-name">{displayName.split(' ')[0]}</span>
+                  <span className="top-nav__role-badge">{roleBadge}</span>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="top-nav__auth-links">
-              <Link to="/user/login" className="top-nav__login-btn">Login</Link>
-              <Link to="/register" className="top-nav__register-btn">Register</Link>
-            </div>
-          )}
+                <ChevronDown
+                  size={14}
+                  className={`top-nav__chevron ${menuOpen ? 'is-rotated' : ''}`}
+                />
+
+                {menuOpen && (
+                  <div className="top-nav__dropdown">
+                    <div className="top-nav__dropdown-header">
+                      <div className="top-nav__avatar top-nav__avatar--lg">{initials}</div>
+                      <div className="top-nav__dropdown-info">
+                        <div className="top-nav__dropdown-name">{displayName}</div>
+                        <div className="top-nav__dropdown-role">{roleBadge}</div>
+                      </div>
+                    </div>
+
+                    <div className="top-nav__dropdown-divider" />
+
+                    {user.role === 'partner' && (
+                      <div className="top-nav__dropdown-group">
+                        <div className="top-nav__dropdown-label">Partner Tools</div>
+                        <Link
+                          to="/partner/analytics"
+                          className="top-nav__dropdown-item"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          <BarChart3 size={15} />
+                          <span>Analytics Cockpit</span>
+                        </Link>
+                        <Link
+                          to="/create-food"
+                          className="top-nav__dropdown-item"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          <PlusCircle size={15} />
+                          <span>Upload Food Video</span>
+                        </Link>
+                      </div>
+                    )}
+
+                    <div className="top-nav__dropdown-group">
+                      <div className="top-nav__dropdown-label">Explore & Curate</div>
+                      <Link
+                        to="/trails"
+                        className="top-nav__dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <Compass size={15} />
+                        <span>Food Trails</span>
+                      </Link>
+                      <Link
+                        to="/saved"
+                        className="top-nav__dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <Bookmark size={15} />
+                        <span>Saved Dishes</span>
+                      </Link>
+                      <Link
+                        to="/taste-profile"
+                        className="top-nav__dropdown-item"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <Flame size={15} />
+                        <span>Taste Profile</span>
+                      </Link>
+                    </div>
+
+                    <div className="top-nav__dropdown-divider" />
+
+                    <button
+                      className="top-nav__dropdown-item top-nav__dropdown-item--danger"
+                      onClick={handleLogout}
+                    >
+                      <LogOut size={15} />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="top-nav__auth-links">
+                <Link to="/user/login" className="top-nav__login-btn">
+                  Sign In
+                </Link>
+                <Link to="/register" className="top-nav__register-btn">
+                  Get Started
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

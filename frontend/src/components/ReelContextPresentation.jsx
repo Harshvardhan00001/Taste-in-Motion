@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, UtensilsCrossed, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, UtensilsCrossed, Flame } from 'lucide-react';
 import ReelVideoAnchor from './ReelVideoAnchor';
 import FoodDecisionPanel from './FoodDecisionPanel';
 import '../styles/reel-context-presentation.css';
@@ -71,7 +71,7 @@ const ReelContextPresentation = ({
         <div className="presentation-nav-bar">
           <div className="nav-bar-left">
             <span className="brand-discovery-tag">
-              <Sparkles size={13} /> DISCOVERY EXPERIENCE
+              <Flame size={14} className="discovery-flame" /> CULINARY FEED
             </span>
             <button
               className="presentation-hungry-btn"

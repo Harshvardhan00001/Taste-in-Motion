@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Sparkles, Zap, Clock, MapPin, IndianRupee, RotateCcw } from 'lucide-react';
+import { X, Flame, Zap, Clock, MapPin, IndianRupee, RotateCcw } from 'lucide-react';
 import '../styles/im-hungry.css';
 
 const BUDGET_PRESETS = [
@@ -176,7 +176,7 @@ const ImHungryModal = ({ isOpen, onClose, onSubmitFilters, initialFilters = null
           <div className="im-hungry-section">
             <div className="section-label-bar">
               <span className="section-label">
-                <Sparkles size={14} /> CRAVINGS & MOOD (MULTI-SELECT)
+                <Flame size={14} /> CRAVINGS & MOOD (MULTI-SELECT)
               </span>
             </div>
             <div className="cravings-chips-wrap">

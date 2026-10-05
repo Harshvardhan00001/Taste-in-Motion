@@ -3,7 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import {
   Compass,
-  Sparkles,
+  Award,
   MapPin,
   Clock,
   Navigation,
@@ -178,7 +178,7 @@ const FoodTrails = () => {
                 className={`trails-tab-btn ${activeTab === 'curated' ? 'active' : ''}`}
                 onClick={() => setActiveTab('curated')}
               >
-                <Sparkles size={14} /> Curated Crawls
+                <Award size={14} /> Curated Crawls
               </button>
               <button
                 className={`trails-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
@@ -290,7 +290,7 @@ const FoodTrails = () => {
                       />
                       {trail.isCurated && (
                         <div className="trail-card__curated-badge">
-                          <Sparkles size={11} /> CURATED
+                          <Award size={11} /> CURATED
                         </div>
                       )}
                     </div>

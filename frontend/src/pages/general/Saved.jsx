@@ -48,9 +48,33 @@ const Saved = () => {
         }
     }
 
+    const toggleLike = async (item) => {
+        const nextLiked = !item.isLiked
+        setVideos(prev =>
+            prev.map(v =>
+                v._id === item._id
+                    ? {
+                          ...v,
+                          isLiked: nextLiked,
+                          likeCount: Math.max(0, (v.likeCount || 0) + (nextLiked ? 1 : -1))
+                      }
+                    : v
+            )
+        )
+        try {
+            await axios.post("http://localhost:3000/api/food/like",
+                { foodId: item._id },
+                { withCredentials: true }
+            )
+        } catch {
+            // optimistic update is retained
+        }
+    }
+
     return (
         <ReelFeed
             items={videos}
+            onLike={toggleLike}
             onSave={removeSaved}
             emptyMessage="No saved videos yet."
         />

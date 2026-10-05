@@ -1,3 +1,5 @@
+@import './theme.css';
+
 /* ==========================================================================
    Food Map & Geospatial Discovery Styles
    PRD Section 5: Phase 5
@@ -9,8 +11,9 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background-color: #0b0f17;
-  color: #f8fafc;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-stack);
 }
 
 /* Map Container */

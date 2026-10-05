@@ -36,6 +36,7 @@ const UserRegister = () => {
         <div className="auth-page-wrapper">
             <div className="auth-card" role="region" aria-labelledby="user-register-title">
                 <header>
+                    <span className="auth-logo">Taste in Motion</span>
                     <h1 id="user-register-title" className="auth-title">Create your account</h1>
                     <p className="auth-subtitle">Join to explore and enjoy delicious meals.</p>
                 </header>

@@ -36,7 +36,7 @@ const FoodPartnerLogin = () => {
     <div className="auth-page-wrapper">
       <div className="auth-card">
         <header>
-          <span className="auth-logo">🍽️ Taste in Motion</span>
+          <span className="auth-logo">Taste in Motion</span>
           <h1 className="auth-title">Partner login</h1>
           <p className="auth-subtitle">Access your dashboard and manage your food content.</p>
         </header>

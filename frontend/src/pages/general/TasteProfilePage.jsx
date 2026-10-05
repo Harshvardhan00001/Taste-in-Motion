@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Flame, Compass, IndianRupee, MapPin, Sparkles, Utensils, Activity, Info } from 'lucide-react';
+import { Flame, Compass, IndianRupee, MapPin, Award, Utensils, Activity, Info } from 'lucide-react';
 import '../../styles/taste-profile.css';
 
 const TasteProfilePage = () => {
@@ -52,7 +52,7 @@ const TasteProfilePage = () => {
         <div className="profile-hero-card">
           <div className="hero-top-row">
             <div className="hero-persona-tag">
-              <Sparkles size={14} className="sparkle-icon" /> DYNAMIC TASTE PERSONA
+              <Flame size={14} className="persona-flame-icon" /> CULINARY TASTE PERSONA
             </div>
             <div className="interactions-pill">
               <Activity size={12} /> {totalInteractions} Interactions Tracked

@@ -39,6 +39,7 @@ const FoodPartnerRegister = () => {
     <div className="auth-page-wrapper">
       <div className="auth-card" role="region" aria-labelledby="partner-register-title">
         <header>
+          <span className="auth-logo">Taste in Motion</span>
           <h1 id="partner-register-title" className="auth-title">Partner sign up</h1>
           <p className="auth-subtitle">Grow your business with our platform.</p>
         </header>

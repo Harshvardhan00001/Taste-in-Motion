@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Heart, Bookmark, MapPin, Compass, Clock, Flame, UtensilsCrossed, Star } from 'lucide-react'
+import { Heart, Bookmark, MapPin, Compass, Clock, Flame, UtensilsCrossed, Star, Share2 } from 'lucide-react'
 import '../styles/reels.css'
 
 const ReelFeed = ({
@@ -12,6 +12,33 @@ const ReelFeed = ({
 }) => {
   const videoRefs = useRef(new Map())
   const navigate = useNavigate()
+  const [copiedId, setCopiedId] = useState(null)
+
+  const handleShare = async (item, e) => {
+    e?.stopPropagation()
+    const targetDishId = item.dish?._id || item.dish || item._id
+    const shareUrl = `${window.location.origin}/dish/${targetDishId}`
+    const shareData = {
+      title: item.dish?.name || item.name || 'Taste in Motion Reel',
+      text: `Check out this delicious reel on Taste in Motion!`,
+      url: shareUrl
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch (err) {
+        if (err.name === 'AbortError') return
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopiedId(item._id)
+      setTimeout(() => setCopiedId(null), 2200)
+    } catch {
+      // ignore
+    }
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -108,6 +135,19 @@ const ReelFeed = ({
                       <Bookmark size={22} fill={item.isSaved ? 'currentColor' : 'none'} />
                     </button>
                     <span className="reel-action__count">{n(item.savesCount)}</span>
+                  </div>
+
+                  {/* Share Action Button */}
+                  <div className="reel-action-group">
+                    <button
+                      onClick={(e) => handleShare(item, e)}
+                      className={`reel-action ${copiedId === item._id ? 'shared' : ''}`}
+                      aria-label="Share Reel"
+                      title={copiedId === item._id ? "Link Copied!" : "Share Reel"}
+                    >
+                      <Share2 size={20} />
+                    </button>
+                    <span className="reel-action__count">{copiedId === item._id ? "Copied" : "Share"}</span>
                   </div>
 
                   {/* Add to Food Trail Action (PRD 6.2 & 6.7) */}

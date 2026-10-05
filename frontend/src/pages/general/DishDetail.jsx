@@ -7,7 +7,7 @@ import {
   Clock,
   MapPin,
   Star,
-  Sparkles,
+  ChefHat,
   Play,
   Navigation,
   CheckCircle2,
@@ -258,7 +258,7 @@ const DishDetail = () => {
                     )}
                     {item.isSpecialty && (
                       <span className="comp-badge-pill badge-signature">
-                        <Sparkles size={11} /> Chef's Signature
+                        <ChefHat size={11} /> Chef's Signature
                       </span>
                     )}
                   </div>

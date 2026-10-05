@@ -10,7 +10,6 @@ import {
   Star,
   Play,
   Navigation,
-  Sparkles,
   X,
   Compass,
   Crosshair,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { X, Compass, Plus, Check, MapPin, Sparkles } from 'lucide-react';
+import { X, Compass, Plus, Check, MapPin, ChefHat } from 'lucide-react';
 import '../styles/trails.css';
 
 const COURSE_TYPES = [
@@ -200,7 +200,7 @@ const AddToTrailModal = ({ isOpen, onClose, item, onSuccess }) => {
             <div className="modal-body">
               {/* Dish Preview */}
               <div className="dish-preview-card">
-                <Sparkles size={18} color="#ff5722" />
+                <ChefHat size={18} color="#ff5722" />
                 <div className="dish-preview-info">
                   <span className="dish-preview-name">{dishName}</span>
                   <span className="dish-preview-store">
