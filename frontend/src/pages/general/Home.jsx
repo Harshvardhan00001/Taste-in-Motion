@@ -245,6 +245,7 @@ const Home = () => {
         onLike={likeVideo}
         onSave={saveVideo}
         onAddToTrail={handleOpenAddToTrail}
+        onOpenHungry={() => setIsHungryModalOpen(true)}
         emptyMessage={
           activeFilters
             ? "No food recommendations match your active budget or craving filters."

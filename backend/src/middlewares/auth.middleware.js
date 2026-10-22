@@ -21,20 +21,14 @@ async function authFoodPartnerMiddleware(req, res, next) {
 }
 
 async function authUserMiddleware(req, res, next) {
-    const token = req.cookies.userToken || req.cookies.partnerToken;
+    const token = req.cookies.userToken;  // ✅ was "token"
     if (!token) {
         return res.status(401).json({ message: "Please login first" })
     }
     try {
         const decoded = jwt.verify(token, process.env.SECRET_KEY)
-        let user = await userModel.findById(decoded.id || decoded._id)
+        const user = await userModel.findById(decoded.id)  // ✅ was decoded._id, token signed with { id }
         if (!user) {
-            const partner = await foodPartnerModel.findById(decoded._id || decoded.id)
-            if (partner) {
-                req.foodPartner = partner
-                req.user = partner
-                return next()
-            }
             return res.status(401).json({ message: "User not found" })
         }
         req.user = user

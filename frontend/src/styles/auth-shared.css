@@ -101,6 +101,16 @@ form.auth-form {
   gap: 16px;
 }
 
+.auth-error {
+  background: var(--color-spicy-bg);
+  border: 1px solid var(--color-spicy-border);
+  color: #fca5a5;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .field-group {
   display: flex;
   flex-direction: column;

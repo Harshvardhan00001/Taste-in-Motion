@@ -104,7 +104,14 @@ const TopNav = () => {
           {/* Craving Discovery Quick Launcher */}
           <button
             className="top-nav__hungry-btn"
-            onClick={() => window.dispatchEvent(new Event('open_im_hungry'))}
+            onClick={() => {
+              if (window.location.pathname !== '/') {
+                navigate('/');
+                setTimeout(() => window.dispatchEvent(new Event('open_im_hungry')), 120);
+              } else {
+                window.dispatchEvent(new Event('open_im_hungry'));
+              }
+            }}
             title="Open situational context search"
           >
             <Flame size={14} className="hungry-flame-icon" />

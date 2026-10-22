@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Flame, Zap, Clock, MapPin, IndianRupee, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Flame, Zap, Clock, MapPin, IndianRupee, RotateCcw, UtensilsCrossed } from 'lucide-react';
 import '../styles/im-hungry.css';
 
 const BUDGET_PRESETS = [
@@ -41,6 +41,15 @@ const ImHungryModal = ({ isOpen, onClose, onSubmitFilters, initialFilters = null
   const [maxDistanceKm, setMaxDistanceKm] = useState(initialFilters?.maxDistanceKm || 5);
   const [selectedCravings, setSelectedCravings] = useState(initialFilters?.cravings || ['Spicy']);
 
+  useEffect(() => {
+    if (initialFilters) {
+      setBudget(initialFilters.budget ?? 300);
+      setTimeAvailable(initialFilters.timeAvailable ?? 45);
+      setMaxDistanceKm(initialFilters.maxDistanceKm ?? 5);
+      setSelectedCravings(initialFilters.cravings ?? ['Spicy']);
+    }
+  }, [initialFilters, isOpen]);
+
   if (!isOpen) return null;
 
   const toggleCraving = (craving) => {
@@ -77,10 +86,10 @@ const ImHungryModal = ({ isOpen, onClose, onSubmitFilters, initialFilters = null
         <div className="im-hungry-header">
           <div className="header-title-row">
             <div className="header-badge">
-              <Zap size={14} className="zap-icon" />
+              <Flame size={14} className="craving-flame-icon" />
               <span>SITUATIONAL CONTEXT</span>
             </div>
-            <h2 className="im-hungry-title">⚡ I'm Hungry Right Now</h2>
+            <h2 className="im-hungry-title">I'm Hungry Right Now</h2>
           </div>
           <button className="im-hungry-close-btn" onClick={onClose} aria-label="Close modal">
             <X size={20} />

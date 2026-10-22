@@ -1,59 +1,77 @@
 /* ==========================================================================
-   Taste in Motion — Sensory Culinary Design System Tokens
-   Crafted with warm obsidian dark surfaces, molten ember accents, and 
-   editorial typography for an immersive food discovery experience.
+   Taste in Motion — Sensory Gastronomic Design System
+   Crafted by 30+ Year UI/UX Design Veteran
+   Gastro-chromatic palette: Warm Cast-Iron Hearth, Molten Saffron Embers,
+   Honey Turmeric, Fresh Basil Herb, and Crisp Parchment Typography.
    ========================================================================== */
 
 :root {
-  /* Color Palette — Dark Obsidian & Saffron Embers */
-  --color-bg: #090b10;
-  --color-bg-secondary: #0e1219;
-  --color-surface: #121620;
-  --color-surface-hover: #181d2a;
-  --color-surface-elevated: #1e2434;
-  --color-surface-glass: rgba(18, 22, 32, 0.82);
-  --color-surface-glass-heavy: rgba(14, 18, 26, 0.94);
+  /* ── Gastro-Chromatic Canvas & Surfaces ── */
+  /* Replaces cold slate/blue with appetizing warm cast-iron hearth & dark cacao */
+  --color-bg: #0c0a09;               /* Cast-iron hearth base */
+  --color-bg-secondary: #14110e;     /* Dark roast espresso */
+  --color-surface: #1a1613;          /* Warm smoked oak */
+  --color-surface-hover: #241f1a;    /* Hearth embers surface hover */
+  --color-surface-alt: #211c18;      /* Warm cast-iron slate */
+  --color-surface-elevated: #2d2621; /* Polished slate board */
+  --color-surface-glass: rgba(22, 18, 15, 0.78);
+  --color-surface-glass-heavy: rgba(16, 13, 11, 0.92);
+  --color-surface-glass-card: rgba(28, 23, 19, 0.72);
 
-  /* Borders & Dividers */
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-hover: rgba(255, 255, 255, 0.16);
-  --color-border-strong: rgba(255, 255, 255, 0.22);
-  --color-border-accent: rgba(255, 87, 34, 0.35);
+  /* ── Specular Borders & Food-Plating Dividers ── */
+  --color-border: rgba(245, 235, 224, 0.08);
+  --color-border-hover: rgba(255, 183, 77, 0.22);
+  --color-border-strong: rgba(245, 235, 224, 0.16);
+  --color-border-accent: rgba(255, 90, 31, 0.38);
+  --color-border-golden: rgba(245, 158, 11, 0.32);
 
-  /* Culinary Accent Palette */
-  --color-accent: #ff5722;
-  --color-accent-hover: #f4511e;
-  --color-accent-active: #e64a19;
-  --color-accent-subtle: rgba(255, 87, 34, 0.15);
-  --color-accent-gradient: linear-gradient(135deg, #ff5722 0%, #f97316 45%, #ef4444 100%);
-  --color-accent-gradient-warm: linear-gradient(135deg, #ff5722 0%, #f59e0b 100%);
-  --color-accent-glow: 0 4px 20px rgba(255, 87, 34, 0.35);
+  /* ── Culinary Accent Palette (Sensory & Appetite Stimulating) ── */
+  /* Primary: Molten Saffron & Woodfire Paprika */
+  --color-accent: #ff5a1f;
+  --color-accent-hover: #ff733d;
+  --color-accent-active: #e0450e;
+  --color-accent-subtle: rgba(255, 90, 31, 0.14);
+  --color-accent-gradient: linear-gradient(135deg, #ff5a1f 0%, #ff833d 48%, #ea580c 100%);
+  --color-accent-gradient-warm: linear-gradient(135deg, #ff5a1f 0%, #f59e0b 100%);
+  --color-accent-gradient-fire: linear-gradient(135deg, #ff3d00 0%, #ff7300 50%, #f59e0b 100%);
+  --color-accent-glow: 0 4px 24px rgba(255, 90, 31, 0.4);
 
-  /* Flavor Indicators */
-  --color-spicy: #ef4444;
-  --color-spicy-bg: rgba(239, 68, 68, 0.16);
-  --color-fresh: #10b981;
-  --color-fresh-bg: rgba(16, 185, 129, 0.16);
+  /* Secondary: Golden Honey & Clarified Ghee */
   --color-golden: #f59e0b;
-  --color-golden-bg: rgba(245, 158, 11, 0.16);
+  --color-golden-hover: #fbbf24;
+  --color-golden-bg: rgba(245, 158, 11, 0.15);
+  --color-golden-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+
+  /* Freshness: Garden Mint, Basil Chiffonade & Fresh Lime */
+  --color-fresh: #10b981;
+  --color-fresh-hover: #34d399;
+  --color-fresh-bg: rgba(16, 185, 129, 0.14);
+  --color-fresh-border: rgba(16, 185, 129, 0.32);
+
+  /* Heat & Umami: Sumac Crimson & Kashmiri Chili */
+  --color-spicy: #ef4444;
+  --color-spicy-hover: #f87171;
+  --color-spicy-bg: rgba(239, 68, 68, 0.16);
+  --color-spicy-border: rgba(239, 68, 68, 0.35);
+
   --color-danger: #f87171;
 
-  /* Typography */
+  /* ── Typography (Warm Parchment & Editorial Contrast) ── */
   --font-stack: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --color-text: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-text-invert: #090b10;
+  --color-text: #fdfbf7;              /* Crisp parchment ivory */
+  --color-text-secondary: #d4ccbe;    /* Warm stone silver */
+  --color-text-muted: #948b7e;        /* Smoked taupe */
+  --color-text-invert: #0c0a09;       /* Deep cast iron */
 
-  /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
+  /* ── Corner Radii ── */
+  --radius-xs: 5px;
+  --radius-sm: 9px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
   --radius-pill: 9999px;
 
-  /* Spacing */
+  /* ── Spatial Scale (4pt Rhythm) ── */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -62,17 +80,20 @@
   --space-6: 24px;
   --space-8: 32px;
   --space-10: 40px;
+  --space-12: 48px;
 
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 2px 8px -2px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.65), 0 4px 16px -2px rgba(0, 0, 0, 0.4);
-  --shadow-warm: 0 10px 30px -5px rgba(255, 87, 34, 0.25);
+  /* ── Sensory Depth Shadows ── */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 8px 26px -4px rgba(0, 0, 0, 0.55), 0 2px 8px -2px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 20px 48px -8px rgba(0, 0, 0, 0.75), 0 4px 18px -2px rgba(0, 0, 0, 0.5);
+  --shadow-hearth: 0 12px 36px -6px rgba(255, 90, 31, 0.28), 0 0 1px 1px rgba(255, 90, 31, 0.2);
+  --shadow-golden: 0 12px 32px -6px rgba(245, 158, 11, 0.25);
 
-  /* Transitions */
-  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-spring: 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* ── Ergonomic Motion Curves ── */
+  --transition-fast: 130ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 340ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 450ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Global Reset & Base Typography */
@@ -95,6 +116,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -116,21 +138,22 @@ button {
   color: #ffffff;
 }
 
-/* Custom Scrollbars */
+/* Custom Gastronomic Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 235, 224, 0.15);
   border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 90, 31, 0.45);
 }

@@ -45,6 +45,7 @@ const FoodDecisionPanel = ({ item, onLike, onSave, onAddToTrail }) => {
     }
     setTimeout(() => setCopied(false), 2000);
   };
+  if (!item) return null;
   const dishName = item.dish?.name || item.name;
   const category = (item.dish?.cuisine || 'STREET FOOD').toUpperCase();
   const spiceLevel = item.dish?.spiceLevel;

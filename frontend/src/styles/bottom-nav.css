@@ -1,18 +1,18 @@
 @import './theme.css';
 
-/* ── Mobile Floating Glass Bottom Dock ── */
+/* ── Mobile Floating Gastronomic Bottom Dock ── */
 .bottom-nav {
   position: fixed;
   bottom: 12px;
   left: 16px;
   right: 16px;
   z-index: 100;
-  background: rgba(14, 18, 26, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--color-surface-glass-heavy);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 20px rgba(255, 90, 31, 0.1);
   padding-bottom: env(safe-area-inset-bottom, 0);
   margin: 0 auto;
   max-width: 480px;
@@ -30,8 +30,8 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 56px;
-  padding: 0 6px;
+  height: 58px;
+  padding: 0 8px;
 }
 
 .bottom-nav__item {
@@ -43,9 +43,9 @@
   gap: 3px;
   color: var(--color-text-muted);
   text-decoration: none;
-  font-size: 0.64rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: all var(--transition-fast);
   -webkit-tap-highlight-color: transparent;
@@ -70,9 +70,9 @@
 }
 
 .bottom-nav__item.is-active .bottom-nav__icon {
-  transform: translateY(-2px) scale(1.1);
+  transform: translateY(-2px) scale(1.12);
   color: var(--color-accent);
-  filter: drop-shadow(0 2px 8px rgba(255, 87, 34, 0.6));
+  filter: drop-shadow(0 2px 10px rgba(255, 90, 31, 0.65));
 }
 
 /* Glowing active dot under label */
@@ -84,5 +84,5 @@
   height: 4px;
   border-radius: 50%;
   background: var(--color-accent);
-  box-shadow: 0 0 8px rgba(255, 87, 34, 0.9);
+  box-shadow: 0 0 8px rgba(255, 90, 31, 0.95);
 }

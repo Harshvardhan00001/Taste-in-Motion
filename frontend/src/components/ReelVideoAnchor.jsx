@@ -12,12 +12,12 @@ const ReelVideoAnchor = ({ item, onLike, onSave }) => {
   const completedLoggedRef = useRef(false);
   const startTimeRef = useRef(Date.now());
 
-  const dishName = item.dish?.name || item.name;
-  const price = item.price ?? 220;
-  const distance = item.distanceKm ?? 1.2;
-  const prepTime = item.prepTimeMinutes ?? 20;
-  const reasonBadge = item.reasonBadge || '⚡ Context Match';
-  const videoId = item._id;
+  const dishName = item?.dish?.name || item?.name || '';
+  const price = item?.price ?? 220;
+  const distance = item?.distanceKm ?? 1.2;
+  const prepTime = item?.prepTimeMinutes ?? 20;
+  const reasonBadge = item?.reasonBadge || '⚡ Context Match';
+  const videoId = item?._id;
 
   useEffect(() => {
     completedLoggedRef.current = false;

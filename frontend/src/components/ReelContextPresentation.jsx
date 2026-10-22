@@ -9,6 +9,7 @@ const ReelContextPresentation = ({
   onLike,
   onSave,
   onAddToTrail,
+  onOpenHungry,
   emptyMessage = 'No food recommendations match your current criteria.'
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -59,9 +60,10 @@ const ReelContextPresentation = ({
     );
   }
 
-  const currentItem = items[currentIndex];
-  const nextItem = items.length > 1 ? items[(currentIndex + 1) % items.length] : null;
-  const formattedIndex = String(currentIndex + 1).padStart(2, '0');
+  const safeIndex = items.length > 0 && currentIndex < items.length ? currentIndex : 0;
+  const currentItem = items[safeIndex];
+  const nextItem = items.length > 1 ? items[(safeIndex + 1) % items.length] : null;
+  const formattedIndex = String(safeIndex + 1).padStart(2, '0');
   const formattedTotal = String(items.length).padStart(2, '0');
 
   return (
@@ -75,7 +77,7 @@ const ReelContextPresentation = ({
             </span>
             <button
               className="presentation-hungry-btn"
-              onClick={() => window.dispatchEvent(new Event('open_im_hungry'))}
+              onClick={onOpenHungry ? onOpenHungry : () => window.dispatchEvent(new Event('open_im_hungry'))}
               title="Open situational context collector"
             >
               ⚡ I'm Hungry
